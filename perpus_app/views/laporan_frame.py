@@ -1,4 +1,13 @@
 import ttkbootstrap as ttk
+import csv
+from tkinter import filedialog
+from ttkbootstrap.dialogs import Messagebox
+
+try:
+    import openpyxl
+    HAS_OPENPYXL = True
+except ImportError:
+    HAS_OPENPYXL = False
 
 class LaporanFrame(ttk.Frame):
     def __init__(self, master, facade, *args, **kwargs):
@@ -14,9 +23,10 @@ class LaporanFrame(ttk.Frame):
         frame_header.pack(fill="x", padx=20, pady=10)
         ttk.Label(frame_header, text="Laporan & Statistik", font=("Helvetica", 20, "bold")).pack(side="left")
         
-        # Tombol Segarkan dan Kembali
+        # Tombol Export, Segarkan dan Kembali
         frame_header_btn = ttk.Frame(frame_header)
         frame_header_btn.pack(side="right")
+        ttk.Button(frame_header_btn, text="Export Data", bootstyle="success", command=self._export_data).pack(side="left", padx=5)
         ttk.Button(frame_header_btn, text="Segarkan Data", bootstyle="info", command=self._load_data).pack(side="left", padx=5)
         ttk.Button(frame_header_btn, text="Kembali ke Dashboard", bootstyle="secondary outline", command=self._go_dashboard).pack(side="left", padx=5)
 
@@ -110,3 +120,57 @@ class LaporanFrame(ttk.Frame):
     def _go_dashboard(self):
         from perpus_app.views.dashboard_frame import DashboardFrame
         self.master.show_frame(DashboardFrame)
+
+    def _export_data(self):
+        # Deteksi tab mana yang sedang aktif dilihat oleh user
+        current_tab = self.notebook.index(self.notebook.select())
+        
+        if current_tab == 0:
+            tree = self.tree_buku
+            default_name = "Laporan_Daftar_Buku"
+        elif current_tab == 1:
+            tree = self.tree_transaksi
+            default_name = "Laporan_Riwayat_Transaksi"
+        else:
+            tree = self.tree_anggota
+            default_name = "Statistik_Anggota_Teraktif"
+            
+        filetypes = [("CSV File", "*.csv")]
+        if HAS_OPENPYXL:
+            filetypes.append(("Excel File", "*.xlsx"))
+            
+        filepath = filedialog.asksaveasfilename(
+            title="Export Laporan",
+            initialfile=default_name,
+            defaultextension=".csv",
+            filetypes=filetypes
+        )
+        
+        if not filepath:
+            return # Dibatalkan oleh user
+            
+        # Ekstrak data dari tabel GUI (Treeview)
+        columns = [tree.heading(col)["text"] for col in tree["columns"]]
+        rows = [tree.item(item)["values"] for item in tree.get_children()]
+            
+        try:
+            if filepath.endswith('.csv'):
+                with open(filepath, mode='w', newline='', encoding='utf-8') as f:
+                    writer = csv.writer(f)
+                    writer.writerow(columns)
+                    writer.writerows(rows)
+            elif filepath.endswith('.xlsx'):
+                if not HAS_OPENPYXL:
+                    Messagebox.show_error("Library openpyxl tidak terinstall. Ekspor ke Excel dibatalkan.", "Gagal Ekspor")
+                    return
+                wb = openpyxl.Workbook()
+                ws = wb.active
+                ws.title = "Laporan Perpustakaan"
+                ws.append(columns)
+                for row in rows:
+                    ws.append(row)
+                wb.save(filepath)
+                
+            Messagebox.show_info(f"Data laporan berhasil diekspor ke:\n{filepath}", "Ekspor Sukses")
+        except Exception as e:
+            Messagebox.show_error(f"Terjadi kesalahan teknis saat mengekspor data:\n{e}", "Gagal Ekspor")
