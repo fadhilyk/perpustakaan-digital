@@ -29,6 +29,8 @@ class RegisterPetugasFrame(ttk.Frame):
 
         ttk.Label(container, text="Jabatan").grid(row=4, column=0, sticky="w", pady=5, padx=5)
         self.ent_jabatan = ttk.Entry(container, width=40)
+        self.ent_jabatan.insert(0, "Administrator")
+        self.ent_jabatan.configure(state="readonly")
         self.ent_jabatan.grid(row=4, column=1, pady=5, padx=5)
 
         ttk.Label(container, text="Username").grid(row=5, column=0, sticky="w", pady=5, padx=5)
