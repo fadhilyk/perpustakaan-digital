@@ -24,7 +24,7 @@ class KategoriFrame(ttk.Frame):
         frame_content.pack(fill="both", expand=True, padx=20, pady=10)
 
         # Panel Kiri: Area Form Tambah/Ubah
-        frame_form = ttk.LabelFrame(frame_content, text="Form Kategori", padding=15)
+        frame_form = ttk.Labelframe(frame_content, text="Form Kategori", padding=15)
         frame_form.pack(side="left", fill="y", padx=(0, 15))
 
         ttk.Label(frame_form, text="Nama Kategori").pack(anchor="w", pady=(5, 2))

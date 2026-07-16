@@ -27,7 +27,7 @@ class PeminjamanFrame(ttk.Frame):
         frame_content.pack(fill="both", expand=True, padx=20, pady=10)
 
         # 2. PANEL KIRI: FORM PERINTAH TRANSAKSI PINJAM & KEMBALI
-        frame_form = ttk.LabelFrame(frame_content, text="Panel Peminjaman Baru", padding=15)
+        frame_form = ttk.Labelframe(frame_content, text="Panel Peminjaman Baru", padding=15)
         frame_form.pack(side="left", fill="y", padx=(0, 15))
         
         ttk.Label(frame_form, text="Anggota Peminjam").pack(anchor="w", pady=(5, 2))

@@ -24,7 +24,7 @@ class AnggotaFrame(ttk.Frame):
         frame_content.pack(fill="both", expand=True, padx=20, pady=10)
 
         # KIRI: FORM
-        frame_form = ttk.LabelFrame(frame_content, text="Form Data Diri Anggota", padding=15)
+        frame_form = ttk.Labelframe(frame_content, text="Form Data Diri Anggota", padding=15)
         frame_form.pack(side="left", fill="y", padx=(0, 15))
         
         ttk.Label(frame_form, text="Nama Lengkap").pack(anchor="w", pady=(5, 2))

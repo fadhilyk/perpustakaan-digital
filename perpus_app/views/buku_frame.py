@@ -36,7 +36,7 @@ class BukuFrame(ttk.Frame):
         frame_content.pack(fill="both", expand=True, padx=20, pady=10)
 
         # 2a. Kiri: Form Buku
-        frame_form = ttk.LabelFrame(frame_content, text="Form Detail Buku", padding=15)
+        frame_form = ttk.Labelframe(frame_content, text="Form Detail Buku", padding=15)
         frame_form.pack(side="left", fill="y", padx=(0, 15))
         
         ttk.Label(frame_form, text="Judul Buku").pack(anchor="w", pady=(5, 2))
