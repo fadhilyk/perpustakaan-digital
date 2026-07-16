@@ -1,0 +1,4 @@
+
+tests/
+seed_data.py
+data/*.json
