@@ -67,8 +67,14 @@ def validasi_username(username: str) -> tuple[bool, str]:
 def validasi_password(password: str, konfirmasi_password: str) -> tuple[bool, str]:
     if not password:
         return False, "Password tidak boleh kosong."
-    if len(password) < 6:
-        return False, "Password minimal 6 karakter."
+    if len(password) < 8:
+        return False, "Password minimal 8 karakter."
+    if not re.search(r"[A-Z]", password):
+        return False, "Password harus mengandung minimal 1 huruf kapital (A-Z)."
+    if not re.search(r"[0-9]", password):
+        return False, "Password harus mengandung minimal 1 angka (0-9)."
+    if not re.search(r"[!@#$%^&*()_+\-=\[\]{};':,.<>?/\\|`~]", password):
+        return False, "Password harus mengandung minimal 1 karakter simbol (contoh: @, _, !, #)."
     if password != konfirmasi_password:
         return False, "Password dan konfirmasi password tidak cocok."
     return True, ""

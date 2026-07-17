@@ -7,73 +7,158 @@ class RegisterPetugasFrame(ttk.Frame):
         super().__init__(master, *args, **kwargs)
         self.facade = facade
         self.master = master
+        self._show_password = False
+        self._show_konfirm  = False
         self._build_ui()
 
     def _build_ui(self):
-        container = ttk.Frame(self)
-        container.pack(expand=True)
+        # ── Kontainer terpusat di tengah layar ──────────────────────────────
+        outer = ttk.Frame(self)
+        outer.place(relx=0.5, rely=0.5, anchor="center")
 
-        ttk.Label(container, text="Registrasi Petugas", font=("Helvetica", 20, "bold")).grid(row=0, column=0, columnspan=2, pady=(0, 20))
+        # ── Card Panel ───────────────────────────────────────────────────────
+        card = ttk.Frame(outer, padding=(40, 25), relief="groove", borderwidth=2)
+        card.pack()
 
-        ttk.Label(container, text="Nama").grid(row=1, column=0, sticky="w", pady=5, padx=5)
-        self.ent_nama = ttk.Entry(container, width=40)
-        self.ent_nama.grid(row=1, column=1, pady=5, padx=5)
+        # ── Logo & Judul ─────────────────────────────────────────────────────
+        ttk.Label(
+            card, text="◈",
+            font=("Helvetica", 36, "bold"),
+            bootstyle="info"
+        ).pack()
+        ttk.Label(
+            card, text="Perpustakaan Digital",
+            font=("Helvetica", 10),
+        ).pack(pady=(0, 2))
+        ttk.Separator(card, orient="horizontal").pack(fill="x", pady=(10, 14))
+        ttk.Label(
+            card, text="Registrasi Petugas",
+            font=("Helvetica", 16, "bold")
+        ).pack(pady=(0, 16))
 
-        ttk.Label(container, text="No. Telepon").grid(row=2, column=0, sticky="w", pady=5, padx=5)
-        self.ent_notelp = ttk.Entry(container, width=40)
-        self.ent_notelp.grid(row=2, column=1, pady=5, padx=5)
+        # ── Form Grid ────────────────────────────────────────────────────────
+        frame_form = ttk.Frame(card)
+        frame_form.pack(fill="x")
 
-        ttk.Label(container, text="Email").grid(row=3, column=0, sticky="w", pady=5, padx=5)
-        self.ent_email = ttk.Entry(container, width=40)
-        self.ent_email.grid(row=3, column=1, pady=5, padx=5)
+        def lbl(row, text):
+            ttk.Label(frame_form, text=text).grid(
+                row=row, column=0, sticky="w", pady=4, padx=(0, 12)
+            )
 
-        ttk.Label(container, text="Jabatan").grid(row=4, column=0, sticky="w", pady=5, padx=5)
-        self.ent_jabatan = ttk.Entry(container, width=40)
+        lbl(0, "Nama")
+        self.ent_nama = ttk.Entry(frame_form, width=36)
+        self.ent_nama.grid(row=0, column=1, pady=4)
+
+        lbl(1, "No. Telepon")
+        self.ent_notelp = ttk.Entry(frame_form, width=36)
+        self.ent_notelp.grid(row=1, column=1, pady=4)
+
+        lbl(2, "Email")
+        self.ent_email = ttk.Entry(frame_form, width=36)
+        self.ent_email.grid(row=2, column=1, pady=4)
+
+        lbl(3, "Jabatan")
+        self.ent_jabatan = ttk.Entry(frame_form, width=36)
         self.ent_jabatan.insert(0, "Administrator")
         self.ent_jabatan.configure(state="readonly")
-        self.ent_jabatan.grid(row=4, column=1, pady=5, padx=5)
+        self.ent_jabatan.grid(row=3, column=1, pady=4)
 
-        ttk.Label(container, text="Username").grid(row=5, column=0, sticky="w", pady=5, padx=5)
-        self.ent_username = ttk.Entry(container, width=40)
-        self.ent_username.grid(row=5, column=1, pady=5, padx=5)
+        lbl(4, "Username")
+        self.ent_username = ttk.Entry(frame_form, width=36)
+        self.ent_username.grid(row=4, column=1, pady=4)
 
-        ttk.Label(container, text="Password").grid(row=6, column=0, sticky="w", pady=5, padx=5)
-        self.ent_password = ttk.Entry(container, width=40, show="*")
-        self.ent_password.grid(row=6, column=1, pady=5, padx=5)
+        # Password + show/hide
+        lbl(5, "Password")
+        frame_pwd = ttk.Frame(frame_form)
+        frame_pwd.grid(row=5, column=1, pady=4, sticky="w")
+        self.ent_password = ttk.Entry(frame_pwd, width=30, show="*")
+        self.ent_password.pack(side="left")
+        self.btn_toggle_pwd = ttk.Button(
+            frame_pwd, text="◉", width=3,
+            bootstyle="secondary outline",
+            command=self._toggle_password
+        )
+        self.btn_toggle_pwd.pack(side="left", padx=(6, 0))
 
-        ttk.Label(container, text="Konfirmasi").grid(row=7, column=0, sticky="w", pady=5, padx=5)
-        self.ent_konfirm = ttk.Entry(container, width=40, show="*")
-        self.ent_konfirm.grid(row=7, column=1, pady=5, padx=5)
+        # Konfirmasi + show/hide
+        lbl(6, "Konfirmasi")
+        frame_konfirm = ttk.Frame(frame_form)
+        frame_konfirm.grid(row=6, column=1, pady=4, sticky="w")
+        self.ent_konfirm = ttk.Entry(frame_konfirm, width=30, show="*")
+        self.ent_konfirm.pack(side="left")
+        self.btn_toggle_konfirm = ttk.Button(
+            frame_konfirm, text="◉", width=3,
+            bootstyle="secondary outline",
+            command=self._toggle_konfirm
+        )
+        self.btn_toggle_konfirm.pack(side="left", padx=(6, 0))
 
-        # Label Error Inline (default text kosong)
-        self.lbl_error = ttk.Label(container, text="", bootstyle="danger")
-        self.lbl_error.grid(row=8, column=0, columnspan=2, pady=10)
+        # Panduan aturan password
+        hint_text = "  ◆ Min. 8 karakter  ◆ Huruf kapital (A-Z)  ◆ Angka (0-9)  ◆ Simbol (@, _, !, #, ...)"
+        ttk.Label(
+            frame_form,
+            text=hint_text,
+            font=("Helvetica", 8, "italic"),
+            bootstyle="secondary"
+        ).grid(row=7, column=0, columnspan=2, sticky="w", pady=(2, 4))
 
-        btn_submit = ttk.Button(container, text="Daftar", bootstyle="primary", command=self._on_submit)
-        btn_submit.grid(row=9, column=0, columnspan=2, pady=(10, 0), sticky="ew")
-        
-        # Opsi ke layar login (bagi yang ingin mendaftarkan petugas berikutnya)
-        btn_login = ttk.Button(container, text="Kembali ke Halaman Login", bootstyle="link", command=self._go_login)
-        btn_login.grid(row=10, column=0, columnspan=2, pady=5)
+
+        # Label error inline
+        self.lbl_error = ttk.Label(card, text="", bootstyle="danger", font=("Helvetica", 9))
+        self.lbl_error.pack(pady=(10, 0))
+
+        # Tombol Daftar
+        ttk.Button(
+            card, text="Daftar",
+            bootstyle="primary",
+            command=self._on_submit
+        ).pack(fill="x", pady=(10, 6))
+
+        # Link kembali ke login
+        ttk.Button(
+            card, text="Kembali ke Halaman Login",
+            bootstyle="link",
+            command=self._go_login
+        ).pack()
+
+    def _toggle_password(self):
+        self._show_password = not self._show_password
+        if self._show_password:
+            self.ent_password.config(show="")
+            self.btn_toggle_pwd.config(text="◎")
+        else:
+            self.ent_password.config(show="*")
+            self.btn_toggle_pwd.config(text="◉")
+
+    def _toggle_konfirm(self):
+        self._show_konfirm = not self._show_konfirm
+        if self._show_konfirm:
+            self.ent_konfirm.config(show="")
+            self.btn_toggle_konfirm.config(text="◎")
+        else:
+            self.ent_konfirm.config(show="*")
+            self.btn_toggle_konfirm.config(text="◉")
 
     def _on_submit(self):
-        # Reset pesan error
         self.lbl_error.config(text="")
-        
-        nama = self.ent_nama.get().strip()
-        notelp = self.ent_notelp.get().strip()
-        email = self.ent_email.get().strip()
-        jabatan = self.ent_jabatan.get().strip()
+
+        nama     = self.ent_nama.get().strip()
+        notelp   = self.ent_notelp.get().strip()
+        email    = self.ent_email.get().strip()
+        jabatan  = self.ent_jabatan.get().strip()
         username = self.ent_username.get().strip()
         password = self.ent_password.get()
-        konfirm = self.ent_konfirm.get()
+        konfirm  = self.ent_konfirm.get()
 
         try:
-            self.facade.petugas_service.registrasi(nama, notelp, email, jabatan, username, password, konfirm)
-            Messagebox.show_info("Registrasi berhasil! Silakan login dengan akun yang dibuat.", "Sukses")
+            self.facade.petugas_service.registrasi(
+                nama, notelp, email, jabatan, username, password, konfirm
+            )
+            Messagebox.show_info(
+                "Registrasi berhasil! Silakan login dengan akun yang dibuat.", "Sukses"
+            )
             self._go_login()
         except AppError as e:
-            # Tampilkan pesan error secara inline
             self.lbl_error.config(text=str(e))
         except Exception as e:
             print(f"[System Log] Error tidak terduga pada Registrasi Petugas: {e}")

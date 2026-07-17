@@ -8,17 +8,7 @@ class BukuFrame(ttk.Frame):
         self.master = master
         self.facade = facade
         
-        # Aturan Khusus (Mandatory): Tolak akses jika belum ada kategori satupun
         self.kategori_list = self.facade.kategori_service.get_all()
-        if not self.kategori_list:
-            Messagebox.show_warning(
-                "Data kategori masih kosong! Anda wajib mendaftarkan kategori terlebih dahulu sebelum bisa menambahkan buku.", 
-                "Akses Ditolak - Kategori Kosong"
-            )
-            # Arahkan paksa kembali ke frame kategori
-            from perpus_app.views.kategori_frame import KategoriFrame
-            self.master.show_frame(KategoriFrame)
-            return
 
         self.selected_id = None
         self._build_ui()

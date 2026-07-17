@@ -4,7 +4,7 @@ class PerpustakaanApp(ttk.Window):
     def __init__(self, facade, start_frame_class):
         # Fallback bisa diakali jika modul tidak terinstall, 
         # namun ttkbootstrap akan kita panggil default.
-        super().__init__(themename="superhero")
+        super().__init__(themename="darkly")
         self.title("Sistem Manajemen Perpustakaan Digital")
         self.geometry("1024x768")
         self.minsize(800, 600)
