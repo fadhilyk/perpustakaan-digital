@@ -1,6 +1,9 @@
 import ttkbootstrap as ttk
+from perpus_app.config import StatusPeminjaman
 from ttkbootstrap.dialogs import Messagebox
+from ttkbootstrap.toast import ToastNotification
 from perpus_app.exceptions.app_exceptions import AppError
+from perpus_app.utils.ui_helpers import setup_empty_state, toggle_empty_state
 
 class PeminjamanFrame(ttk.Frame):
     def __init__(self, master, facade, *args, **kwargs):
@@ -71,11 +74,13 @@ class PeminjamanFrame(ttk.Frame):
         self.tree.column("status", width=90, anchor="center")
         self.tree.column("denda", width=100, anchor="e")
 
-        scrollbar = ttk.Scrollbar(frame_kanan, orient="vertical", command=self.tree.yview)
-        self.tree.configure(yscrollcommand=scrollbar.set)
+        self.scrollbar = ttk.Scrollbar(frame_kanan, orient="vertical", command=self.tree.yview)
+        self.tree.configure(yscrollcommand=self.scrollbar.set)
         
-        scrollbar.pack(side="right", fill="y")
+        self.scrollbar.pack(side="right", fill="y")
         self.tree.pack(fill="both", expand=True)
+
+        self.empty_state_frame = setup_empty_state(frame_kanan, "Belum ada riwayat peminjaman.")
         
         self.tree.bind("<<TreeviewSelect>>", self._on_select)
 
@@ -109,8 +114,11 @@ class PeminjamanFrame(ttk.Frame):
 
     def _load_data(self):
         """Menyerap semua aktivitas transaksi ke dalam tabel."""
-        trx_list = self.facade.peminjaman_service.get_all()
-        self._render_tabel(trx_list)
+        pinjam_list = self.facade.peminjaman_service.get_all()
+        
+        toggle_empty_state(self.tree, getattr(self, 'scrollbar', None), getattr(self, 'empty_state_frame', None), len(pinjam_list) == 0)
+        
+        self._render_tabel(pinjam_list)
         self.btn_kembali.config(state="disabled")
         self.selected_id_pinjam = None
 
@@ -124,7 +132,7 @@ class PeminjamanFrame(ttk.Frame):
             status = val[5]
             
             # State manager untuk tombol Pengembalian
-            if status == "Aktif":
+            if status == StatusPeminjaman.DIPINJAM:
                 self.btn_kembali.config(state="normal")
             else:
                 self.btn_kembali.config(state="disabled")
@@ -152,7 +160,7 @@ class PeminjamanFrame(ttk.Frame):
             self.facade.peminjaman_service.pinjam_buku(id_anggota, id_buku, id_petugas)
             self._load_data()
             self._refresh_combos()  # Segera kurangi stok di tampilan ComboBox!
-            Messagebox.show_info("Sukses meminjamkan buku! Stok sudah otomatis dikurangi.", "Transaksi Berhasil")
+            ToastNotification(title="Transaksi Berhasil", message="Sukses meminjamkan buku! Stok sudah otomatis dikurangi.", duration=3000, bootstyle="success").show_toast()
         except AppError as e:
             Messagebox.show_error(str(e), "Penolakan Transaksi")
         except Exception as e:
@@ -163,13 +171,13 @@ class PeminjamanFrame(ttk.Frame):
         if not self.selected_id_pinjam:
             return
             
-        konfirm = Messagebox.show_question(f"Setujui pengembalian untuk ID Transaksi {self.selected_id_pinjam}?\n(Denda otomatis dihitung).", "Konfirmasi Laporan Kembali")
+        konfirm = Messagebox.yesno(f"Setujui pengembalian untuk ID Transaksi {self.selected_id_pinjam}?\n(Denda otomatis dihitung).", "Konfirmasi Laporan Kembali")
         if konfirm == "Yes":
             try:
                 self.facade.peminjaman_service.kembalikan_buku(self.selected_id_pinjam)
                 self._load_data()
                 self._refresh_combos()  # Kembalikan stok buku ke ComboBox
-                Messagebox.show_info("Buku resmi dikembalikan, kuota stok diperbarui dan denda dikalkulasi final.", "Pengembalian Selesai")
+                ToastNotification(title="Pengembalian Selesai", message="Buku resmi dikembalikan, kuota stok diperbarui dan denda dikalkulasi final.", duration=3000, bootstyle="success").show_toast()
             except AppError as e:
                 Messagebox.show_error(str(e), "Kegagalan Sistem")
             except Exception as e:

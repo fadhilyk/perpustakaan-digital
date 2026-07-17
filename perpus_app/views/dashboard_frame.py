@@ -5,6 +5,8 @@ from perpus_app.views.anggota_frame import AnggotaFrame
 from perpus_app.views.peminjaman_frame import PeminjamanFrame
 from perpus_app.views.laporan_frame import LaporanFrame
 from perpus_app.config import StatusPeminjaman
+from perpus_app.utils.icon_manager import IconManager
+from perpus_app.utils.ui_helpers import add_card_hover_effect
 
 class DashboardFrame(ttk.Frame):
     def __init__(self, master, facade, *args, **kwargs):
@@ -110,17 +112,22 @@ class DashboardFrame(ttk.Frame):
         for i, (label, value, style) in enumerate(stats):
             card = ttk.Frame(frame_stats, padding=(20, 12), relief="groove", borderwidth=2)
             card.grid(row=0, column=i, padx=8)
-            ttk.Label(
+            lbl_val = ttk.Label(
                 card,
                 text=value,
                 font=("Helvetica", 26, "bold"),
                 bootstyle=style
-            ).pack()
-            ttk.Label(
+            )
+            lbl_val.pack()
+            lbl_desc = ttk.Label(
                 card,
                 text=label,
                 font=("Helvetica", 9)
-            ).pack()
+            )
+            lbl_desc.pack()
+            
+            # Tambahkan efek hover
+            add_card_hover_effect(card, [lbl_val, lbl_desc], style)
 
         # ── Separator bawah ─────────────────────────────────────────────────
         ttk.Separator(self.container, orient="horizontal").pack(fill="x", pady=(0, 18))
@@ -130,42 +137,49 @@ class DashboardFrame(ttk.Frame):
         frame_btn.pack(pady=(0, 10))
 
         btn_style = "primary"
-        btn_width = 26
+        btn_width = 24
+
+        # Pre-load icons
+        self.icon_dashboard = IconManager.get_icon("dashboard", size=(16, 16))
+        self.icon_books = IconManager.get_icon("books", size=(16, 16))
+        self.icon_users = IconManager.get_icon("users", size=(16, 16))
+        self.icon_tags = IconManager.get_icon("tags", size=(16, 16))
+        self.icon_logout = IconManager.get_icon("logout", size=(16, 16))
 
         # Baris 1
         ttk.Button(
-            frame_btn, text="❏  Kelola Kategori",
+            frame_btn, text=" Kelola Kategori", image=self.icon_tags, compound="left",
             bootstyle=btn_style, width=btn_width,
             command=lambda: self.master.show_frame(KategoriFrame)
         ).grid(row=0, column=0, padx=10, pady=8)
         ttk.Button(
-            frame_btn, text="◈  Kelola Buku",
+            frame_btn, text=" Kelola Buku", image=self.icon_books, compound="left",
             bootstyle=btn_style, width=btn_width,
             command=self._go_buku
         ).grid(row=0, column=1, padx=10, pady=8)
 
         # Baris 2
         ttk.Button(
-            frame_btn, text="⊙  Kelola Anggota",
+            frame_btn, text=" Kelola Anggota", image=self.icon_users, compound="left",
             bootstyle=btn_style, width=btn_width,
             command=lambda: self.master.show_frame(AnggotaFrame)
         ).grid(row=1, column=0, padx=10, pady=8)
         ttk.Button(
-            frame_btn, text="↻  Transaksi Peminjaman",
+            frame_btn, text=" Transaksi Peminjaman", image=self.icon_dashboard, compound="left",
             bootstyle=btn_style, width=btn_width,
             command=lambda: self.master.show_frame(PeminjamanFrame)
         ).grid(row=1, column=1, padx=10, pady=8)
 
         # Baris 3: lebar penuh
         ttk.Button(
-            frame_btn, text="▦  Laporan & Statistik",
+            frame_btn, text=" Laporan & Statistik", image=self.icon_dashboard, compound="left",
             bootstyle="info", width=btn_width,
             command=lambda: self.master.show_frame(LaporanFrame)
         ).grid(row=2, column=0, columnspan=2, padx=10, pady=8)
 
         # ── Logout ───────────────────────────────────────────────────────────
         ttk.Button(
-            self.container, text="✕  Logout",
+            self.container, text=" Logout", image=self.icon_logout, compound="left",
             bootstyle="danger outline",
             command=self._logout
         ).pack(pady=(18, 0))

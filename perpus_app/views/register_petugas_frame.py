@@ -1,5 +1,6 @@
 import ttkbootstrap as ttk
 from ttkbootstrap.dialogs import Messagebox
+from ttkbootstrap.toast import ToastNotification
 from perpus_app.exceptions.app_exceptions import AppError
 
 class RegisterPetugasFrame(ttk.Frame):
@@ -47,51 +48,51 @@ class RegisterPetugasFrame(ttk.Frame):
 
         lbl(0, "Nama")
         self.ent_nama = ttk.Entry(frame_form, width=36)
-        self.ent_nama.grid(row=0, column=1, pady=4)
+        self.ent_nama.grid(row=0, column=1, pady=4, sticky="ew")
 
         lbl(1, "No. Telepon")
         self.ent_notelp = ttk.Entry(frame_form, width=36)
-        self.ent_notelp.grid(row=1, column=1, pady=4)
+        self.ent_notelp.grid(row=1, column=1, pady=4, sticky="ew")
 
         lbl(2, "Email")
         self.ent_email = ttk.Entry(frame_form, width=36)
-        self.ent_email.grid(row=2, column=1, pady=4)
+        self.ent_email.grid(row=2, column=1, pady=4, sticky="ew")
 
         lbl(3, "Jabatan")
         self.ent_jabatan = ttk.Entry(frame_form, width=36)
         self.ent_jabatan.insert(0, "Administrator")
         self.ent_jabatan.configure(state="readonly")
-        self.ent_jabatan.grid(row=3, column=1, pady=4)
+        self.ent_jabatan.grid(row=3, column=1, pady=4, sticky="ew")
 
         lbl(4, "Username")
         self.ent_username = ttk.Entry(frame_form, width=36)
-        self.ent_username.grid(row=4, column=1, pady=4)
+        self.ent_username.grid(row=4, column=1, pady=4, sticky="ew")
 
         # Password + show/hide
         lbl(5, "Password")
         frame_pwd = ttk.Frame(frame_form)
-        frame_pwd.grid(row=5, column=1, pady=4, sticky="w")
-        self.ent_password = ttk.Entry(frame_pwd, width=30, show="*")
-        self.ent_password.pack(side="left")
+        frame_pwd.grid(row=5, column=1, pady=4, sticky="ew")
+        self.ent_password = ttk.Entry(frame_pwd, show="*")
+        self.ent_password.pack(side="left", expand=True, fill="x")
         self.btn_toggle_pwd = ttk.Button(
             frame_pwd, text="◉", width=3,
             bootstyle="secondary outline",
             command=self._toggle_password
         )
-        self.btn_toggle_pwd.pack(side="left", padx=(6, 0))
+        self.btn_toggle_pwd.pack(side="right", padx=(6, 0))
 
         # Konfirmasi + show/hide
         lbl(6, "Konfirmasi")
         frame_konfirm = ttk.Frame(frame_form)
-        frame_konfirm.grid(row=6, column=1, pady=4, sticky="w")
-        self.ent_konfirm = ttk.Entry(frame_konfirm, width=30, show="*")
-        self.ent_konfirm.pack(side="left")
+        frame_konfirm.grid(row=6, column=1, pady=4, sticky="ew")
+        self.ent_konfirm = ttk.Entry(frame_konfirm, show="*")
+        self.ent_konfirm.pack(side="left", expand=True, fill="x")
         self.btn_toggle_konfirm = ttk.Button(
             frame_konfirm, text="◉", width=3,
             bootstyle="secondary outline",
             command=self._toggle_konfirm
         )
-        self.btn_toggle_konfirm.pack(side="left", padx=(6, 0))
+        self.btn_toggle_konfirm.pack(side="right", padx=(6, 0))
 
         # Panduan aturan password
         hint_text = "  ◆ Min. 8 karakter  ◆ Huruf kapital (A-Z)  ◆ Angka (0-9)  ◆ Simbol (@, _, !, #, ...)"
@@ -154,9 +155,7 @@ class RegisterPetugasFrame(ttk.Frame):
             self.facade.petugas_service.registrasi(
                 nama, notelp, email, jabatan, username, password, konfirm
             )
-            Messagebox.show_info(
-                "Registrasi berhasil! Silakan login dengan akun yang dibuat.", "Sukses"
-            )
+            ToastNotification(title="Sukses", message="Registrasi berhasil! Silakan login dengan akun yang dibuat.", duration=3000, bootstyle="success").show_toast()
             self._go_login()
         except AppError as e:
             self.lbl_error.config(text=str(e))

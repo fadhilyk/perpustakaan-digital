@@ -1,6 +1,8 @@
 import ttkbootstrap as ttk
 from ttkbootstrap.dialogs import Messagebox
+from ttkbootstrap.toast import ToastNotification
 from perpus_app.exceptions.app_exceptions import AppError
+from perpus_app.utils.ui_helpers import setup_empty_state, toggle_empty_state
 
 class KategoriFrame(ttk.Frame):
     def __init__(self, master, facade, *args, **kwargs):
@@ -61,11 +63,13 @@ class KategoriFrame(ttk.Frame):
         self.tree.column("deskripsi", width=350)
         
         # Penambahan scrollbar agar list panjang bisa digeser
-        scrollbar = ttk.Scrollbar(frame_table, orient="vertical", command=self.tree.yview)
-        self.tree.configure(yscrollcommand=scrollbar.set)
+        self.scrollbar = ttk.Scrollbar(frame_table, orient="vertical", command=self.tree.yview)
+        self.tree.configure(yscrollcommand=self.scrollbar.set)
         
-        scrollbar.pack(side="right", fill="y")
+        self.scrollbar.pack(side="right", fill="y")
         self.tree.pack(fill="both", expand=True)
+
+        self.empty_state_frame = setup_empty_state(frame_table, "Belum ada Kategori. Silakan tambah data baru.")
         
         # Bind aksi ketika baris tabel diklik
         self.tree.bind("<<TreeviewSelect>>", self._on_select)
@@ -78,6 +82,9 @@ class KategoriFrame(ttk.Frame):
             
         # Panggil service untuk daftar seluruh kategori
         kategori_list = self.facade.kategori_service.get_all()
+        
+        toggle_empty_state(self.tree, self.scrollbar, self.empty_state_frame, len(kategori_list) == 0)
+        
         for k in kategori_list:
             self.tree.insert("", "end", values=(k.id_kategori, k.nama_kategori, k.deskripsi))
 
@@ -105,7 +112,7 @@ class KategoriFrame(ttk.Frame):
             self.facade.kategori_service.tambah(nama, desk)
             self._clear_form()
             self._load_data()
-            Messagebox.show_info("Kategori berhasil ditambahkan.", "Berhasil")
+            ToastNotification(title="Berhasil", message="Kategori berhasil ditambahkan.", duration=3000, bootstyle="success").show_toast()
         except AppError as e:
             Messagebox.show_error(str(e), "Gagal Validasi")
         except Exception as e:
@@ -123,7 +130,7 @@ class KategoriFrame(ttk.Frame):
             self.facade.kategori_service.update(self.selected_id, nama, desk)
             self._clear_form()
             self._load_data()
-            Messagebox.show_info("Kategori berhasil diperbarui.", "Berhasil")
+            ToastNotification(title="Berhasil", message="Kategori berhasil diperbarui.", duration=3000, bootstyle="success").show_toast()
         except AppError as e:
             Messagebox.show_error(str(e), "Gagal Validasi")
 
@@ -132,14 +139,14 @@ class KategoriFrame(ttk.Frame):
             Messagebox.show_warning("Mohon pilih kategori yang ingin dihapus dari tabel terlebih dahulu.", "Pilih Data")
             return
             
-        konfirm = Messagebox.show_question(f"Yakin ingin menghapus kategori dengan ID {self.selected_id}?", "Konfirmasi Penghapusan")
-        # Nilai balikan (return) dari Messagebox ttkbootstrap pada show_question adalah tombol yg diklik ('Yes', 'No')
+        konfirm = Messagebox.yesno(f"Yakin ingin menghapus kategori dengan ID {self.selected_id}?", "Konfirmasi Penghapusan")
+        # Nilai balikan (return) dari Messagebox ttkbootstrap pada yesno adalah tombol yg diklik ('Yes', 'No')
         if konfirm == "Yes":
             try:
                 self.facade.kategori_service.hapus(self.selected_id)
                 self._clear_form()
                 self._load_data()
-                Messagebox.show_info("Kategori telah berhasil dihapus dari peredaran.", "Dihapus")
+                ToastNotification(title="Dihapus", message="Kategori telah berhasil dihapus dari peredaran.", duration=3000, bootstyle="warning").show_toast()
             except AppError as e:
                 # Menangkap KategoriMasihDipakaiError jika masih ada relasi buku
                 Messagebox.show_error(str(e), "Tidak Dapat Dihapus")

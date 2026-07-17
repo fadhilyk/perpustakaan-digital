@@ -1,6 +1,8 @@
 import ttkbootstrap as ttk
 from ttkbootstrap.dialogs import Messagebox
+from ttkbootstrap.toast import ToastNotification
 from perpus_app.exceptions.app_exceptions import AppError
+from perpus_app.utils.ui_helpers import setup_empty_state, toggle_empty_state
 
 class AnggotaFrame(ttk.Frame):
     def __init__(self, master, facade, *args, **kwargs):
@@ -70,18 +72,21 @@ class AnggotaFrame(ttk.Frame):
         self.tree.column("email", width=200)
         self.tree.column("alamat", width=250)
 
-        scrollbar = ttk.Scrollbar(frame_kanan, orient="vertical", command=self.tree.yview)
-        self.tree.configure(yscrollcommand=scrollbar.set)
+        self.scrollbar = ttk.Scrollbar(frame_kanan, orient="vertical", command=self.tree.yview)
+        self.tree.configure(yscrollcommand=self.scrollbar.set)
         
-        scrollbar.pack(side="right", fill="y")
+        self.scrollbar.pack(side="right", fill="y")
         self.tree.pack(fill="both", expand=True)
+
+        self.empty_state_frame = setup_empty_state(frame_kanan, "Belum ada Anggota. Silakan mendaftar baru.")
         
         self.tree.bind("<<TreeviewSelect>>", self._on_select)
 
     def _render_tabel(self, data_list):
-        """Merender baris tabel, mem-bypass properti private secara aman menggunakan getter (getattr)."""
         for item in self.tree.get_children():
             self.tree.delete(item)
+            
+        toggle_empty_state(self.tree, getattr(self, 'scrollbar', None), getattr(self, 'empty_state_frame', None), len(data_list) == 0)
             
         for a in data_list:
             # Karena di model _no_telepon dan _email adalah protected, getattr kita fungsikan untuk jaga-jaga
@@ -131,7 +136,7 @@ class AnggotaFrame(ttk.Frame):
             self.facade.anggota_service.tambah(nama, notelp, email, alamat)
             self._clear_form()
             self._load_data()
-            Messagebox.show_info("Berhasil mendaftarkan anggota baru.", "Sukses")
+            ToastNotification(title="Sukses", message="Berhasil mendaftarkan anggota baru.", duration=3000, bootstyle="success").show_toast()
         except AppError as e:
             Messagebox.show_error(str(e), "Pelanggaran Validasi")
         except Exception as e:
@@ -147,7 +152,7 @@ class AnggotaFrame(ttk.Frame):
             self.facade.anggota_service.update(self.selected_id, nama, notelp, email, alamat)
             self._clear_form()
             self._load_data()
-            Messagebox.show_info(f"Data anggota ID {self.selected_id} sukses diperbarui.", "Berhasil Diubah")
+            ToastNotification(title="Berhasil Diubah", message=f"Data anggota ID {self.selected_id} sukses diperbarui.", duration=3000, bootstyle="success").show_toast()
         except AppError as e:
             Messagebox.show_error(str(e), "Pelanggaran Validasi")
         except Exception as e:
@@ -159,13 +164,13 @@ class AnggotaFrame(ttk.Frame):
             Messagebox.show_warning("Pilih anggota yang akan Anda lenyapkan dari tabel terlebih dahulu.", "Peringatan Hapus")
             return
             
-        konfirm = Messagebox.show_question(f"Anda sangat yakin untuk menghapus Anggota ID {self.selected_id} selamanya?", "Konfirmasi Eksekusi")
+        konfirm = Messagebox.yesno(f"Anda sangat yakin untuk menghapus Anggota ID {self.selected_id} selamanya?", "Konfirmasi Eksekusi")
         if konfirm == "Yes":
             try:
                 self.facade.anggota_service.hapus(self.selected_id)
                 self._clear_form()
                 self._load_data()
-                Messagebox.show_info("Anggota berhasil terhapus sempurna.", "Penghapusan Sukses")
+                ToastNotification(title="Penghapusan Sukses", message="Anggota berhasil terhapus sempurna.", duration=3000, bootstyle="warning").show_toast()
             except AppError as e:
                 Messagebox.show_error(str(e), "Penolakan Integritas Bisnis")
             except Exception as e:

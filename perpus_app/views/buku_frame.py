@@ -1,6 +1,8 @@
 import ttkbootstrap as ttk
 from ttkbootstrap.dialogs import Messagebox
+from ttkbootstrap.toast import ToastNotification
 from perpus_app.exceptions.app_exceptions import AppError
+from perpus_app.utils.ui_helpers import setup_empty_state, toggle_empty_state
 
 class BukuFrame(ttk.Frame):
     def __init__(self, master, facade, *args, **kwargs):
@@ -96,17 +98,21 @@ class BukuFrame(ttk.Frame):
         self.tree.column("kategori", width=120)
         self.tree.column("status", width=80, anchor="center")
 
-        scrollbar = ttk.Scrollbar(frame_kanan, orient="vertical", command=self.tree.yview)
-        self.tree.configure(yscrollcommand=scrollbar.set)
+        self.scrollbar = ttk.Scrollbar(frame_kanan, orient="vertical", command=self.tree.yview)
+        self.tree.configure(yscrollcommand=self.scrollbar.set)
         
-        scrollbar.pack(side="right", fill="y")
+        self.scrollbar.pack(side="right", fill="y")
         self.tree.pack(fill="both", expand=True)
+
+        self.empty_state_frame = setup_empty_state(frame_kanan, "Belum ada Buku. Silakan tambah data baru.")
         
         self.tree.bind("<<TreeviewSelect>>", self._on_select)
 
     def _render_tabel(self, data_list):
         for item in self.tree.get_children():
             self.tree.delete(item)
+            
+        toggle_empty_state(self.tree, getattr(self, 'scrollbar', None), getattr(self, 'empty_state_frame', None), len(data_list) == 0)
             
         for b in data_list:
             kat_nama = b._kategori.nama_kategori if getattr(b, '_kategori', None) else "Tanpa Kategori"
@@ -192,7 +198,7 @@ class BukuFrame(ttk.Frame):
             self.facade.buku_service.tambah_buku(judul, penulis, penerbit, tahun, stok, id_kategori)
             self._clear_form()
             self._load_data()
-            Messagebox.show_info("Buku berhasil ditambahkan.", "Berhasil")
+            ToastNotification(title="Berhasil", message="Buku berhasil ditambahkan.", duration=3000, bootstyle="success").show_toast()
         except AppError as e:
             Messagebox.show_error(str(e), "Penolakan Validasi")
         except Exception as e:
@@ -209,7 +215,7 @@ class BukuFrame(ttk.Frame):
             self.facade.buku_service.update_buku(self.selected_id, judul, penulis, penerbit, tahun, stok, id_kategori)
             self._clear_form()
             self._load_data()
-            Messagebox.show_info("Buku berhasil diperbarui.", "Berhasil")
+            ToastNotification(title="Berhasil", message="Buku berhasil diperbarui.", duration=3000, bootstyle="success").show_toast()
         except AppError as e:
             Messagebox.show_error(str(e), "Penolakan Validasi")
         except Exception as e:
@@ -221,13 +227,13 @@ class BukuFrame(ttk.Frame):
             Messagebox.show_warning("Pilih buku dari tabel terlebih dahulu.", "Peringatan")
             return
             
-        konfirm = Messagebox.show_question(f"Anda yakin akan menghapus data buku ID {self.selected_id}?", "Verifikasi Hapus")
+        konfirm = Messagebox.yesno(f"Anda yakin akan menghapus data buku ID {self.selected_id}?", "Verifikasi Hapus")
         if konfirm == "Yes":
             try:
                 self.facade.buku_service.hapus_buku(self.selected_id)
                 self._clear_form()
                 self._load_data()
-                Messagebox.show_info("Rekam jejak buku berhasil dihapus.", "Dihapus")
+                ToastNotification(title="Dihapus", message="Rekam jejak buku berhasil dihapus.", duration=3000, bootstyle="warning").show_toast()
             except AppError as e:
                 Messagebox.show_error(str(e), "Gagal Menghapus")
             except Exception as e:

@@ -1,1 +1,11 @@
-[]
+[
+    {
+        "id_pengguna": 1,
+        "nama": "fadhilyk",
+        "no_telepon": "085220402109",
+        "email": "fadhiltest@gmail.com",
+        "jabatan": "Administrator",
+        "username": "fadhilyk",
+        "password_hash": "d1d49d296a5a5afb460f44c1005b11cf2e8ccf1cf6120c2c5a25112f2db8be39"
+    }
+]
