@@ -1,1 +1,29 @@
-[]
+[
+    {
+        "id_buku": 1,
+        "judul": "Laskar Pelangi",
+        "penulis": "Andrea Hirata",
+        "penerbit": "Bentang Pustaka",
+        "tahun": 2005,
+        "stok": 12,
+        "id_kategori": 1
+    },
+    {
+        "id_buku": 2,
+        "judul": "Clean Code",
+        "penulis": "Robert C. Martin",
+        "penerbit": "Prentice Hall",
+        "tahun": 2008,
+        "stok": 4,
+        "id_kategori": 2
+    },
+    {
+        "id_buku": 3,
+        "judul": "Automate the Boring Stuff with Python",
+        "penulis": "Al Sweigart",
+        "penerbit": "No Starch Press",
+        "tahun": 2019,
+        "stok": 8,
+        "id_kategori": 2
+    }
+]

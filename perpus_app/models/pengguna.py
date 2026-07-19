@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from perpus_app.utils.validators import validasi_teks, validasi_email, validasi_no_telepon
 from perpus_app.exceptions.app_exceptions import ValidasiError
 
+# ABSTRAKSI
 class Pengguna(ABC):
     def __init__(self, id_pengguna: int, nama: str, no_telepon: str, email: str):
         self._id_pengguna = id_pengguna
@@ -18,6 +19,7 @@ class Pengguna(ABC):
     def id_pengguna(self) -> int:
         return self._id_pengguna
 
+    # ENKAPSULASI
     @property
     def nama(self) -> str:
         return self._nama

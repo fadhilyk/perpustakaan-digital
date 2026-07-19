@@ -7,6 +7,7 @@ if TYPE_CHECKING:
     from perpus_app.models.anggota import Anggota as KelasAnggota
     from perpus_app.models.peminjaman import Peminjaman
 
+# INHERITANCE
 class Petugas(Pengguna):
     def __init__(self, id_pengguna: int, nama: str, no_telepon: str, email: str, jabatan: str, username: str, password_hash: str):
         # Bukti Inheritance: Memanggil __init__ dari kelas induk
@@ -64,6 +65,7 @@ class Petugas(Pengguna):
         """
         return True
 
+    # POLIMORFISME
     def tampilkan_info(self) -> str:
         # Bukti Polymorphism: Implementasi metode yang dioverride berbeda dari Anggota
         return f"Petugas: {self.nama} (Jabatan: {self._jabatan})"

@@ -1,1 +1,16 @@
-[]
+[
+    {
+        "id_pengguna": 1,
+        "nama": "Budi Santoso",
+        "no_telepon": "081234567890",
+        "email": "budi.santoso@email.com",
+        "alamat": "Jl. Jend. Sudirman No 12, Jakarta"
+    },
+    {
+        "id_pengguna": 2,
+        "nama": "Siti Aminah",
+        "no_telepon": "081987654321",
+        "email": "siti.aminah@email.com",
+        "alamat": "Jl. Asia Afrika No 45, Bandung"
+    }
+]

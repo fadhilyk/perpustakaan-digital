@@ -1,3 +1,4 @@
+# FAULT HANDLING
 class AppError(Exception):
     """Base untuk semua exception aplikasi."""
     pass

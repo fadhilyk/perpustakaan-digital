@@ -5,6 +5,7 @@ from perpus_app.services.kategori_service import KategoriService
 from perpus_app.exceptions.app_exceptions import DataTidakDitemukanError, ValidasiError
 from perpus_app.utils.id_generator import generate_id
 
+# CRUD
 class BukuService:
     def __init__(self, repository: BukuRepository, kategori_service: KategoriService):
         self._repository = repository

@@ -2,13 +2,13 @@ import os
 from PIL import Image, ImageTk
 
 class IconManager:
-    """Manages caching and loading of icons to avoid garbage collection issues in Tkinter."""
+
     
     _icons = {}
     
     @classmethod
     def get_icon(cls, name, size=(24, 24)):
-        """Loads and returns an ImageTk.PhotoImage for the given icon name."""
+
         key = f"{name}_{size[0]}x{size[1]}"
         if key in cls._icons:
             return cls._icons[key]

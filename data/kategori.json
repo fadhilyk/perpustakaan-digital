@@ -1,1 +1,12 @@
-[]
+[
+    {
+        "id_kategori": 1,
+        "nama_kategori": "Fiksi & Sastra",
+        "deskripsi": "Koleksi buku novel, cerpen, dan dongeng fiktif."
+    },
+    {
+        "id_kategori": 2,
+        "nama_kategori": "Ilmu Komputer",
+        "deskripsi": "Buku teknologi, pemrograman, hardware, dan IT."
+    }
+]

@@ -1,8 +1,5 @@
 def add_card_hover_effect(card_frame, labels, default_style, hover_style="info"):
-    """
-    Menambahkan efek hover pada kartu statistik.
-    Saat di-hover, relief akan berubah dan style label akan menyala.
-    """
+
     def on_enter(e):
         card_frame.configure(relief="raised", borderwidth=2)
         # Efek sedikit terangkat

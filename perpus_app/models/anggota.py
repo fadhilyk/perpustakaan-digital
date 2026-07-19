@@ -9,6 +9,7 @@ if TYPE_CHECKING:
     from perpus_app.models.peminjaman import Peminjaman
     from perpus_app.config import StatusPeminjaman
 
+# INHERITANCE
 class Anggota(Pengguna):
     def __init__(self, id_pengguna: int, nama: str, no_telepon: str, email: str, alamat: str):
         # Bukti Inheritance: Memanggil __init__ dari kelas induk
@@ -53,6 +54,6 @@ class Anggota(Pengguna):
     def get_riwayat(self) -> list['Peminjaman']:
         return self._list_peminjaman
 
+    # POLIMORFISME
     def tampilkan_info(self) -> str:
-        # Bukti Polymorphism: Implementasi metode yang dioverride secara spesifik
-        return f"Anggota: {self.nama}, Alamat: {self._alamat}, Pinjaman Aktif: {len(self.get_aktif())}"
+        return f"Anggota: {self.nama}, Alamat: {self._alamat}, Aktif Peminjaman: {len(self._list_peminjaman)}"
