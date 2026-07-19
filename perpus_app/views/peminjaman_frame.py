@@ -24,7 +24,7 @@ class PeminjamanFrame(ttk.Frame):
         frame_header = ttk.Frame(self)
         frame_header.pack(fill="x", padx=20, pady=10)
         ttk.Label(frame_header, text="Sistem Transaksi Peminjaman", font=("Helvetica", 20, "bold")).pack(side="left")
-        ttk.Button(frame_header, text="Kembali ke Dashboard", bootstyle="secondary outline", command=self._go_dashboard).pack(side="right")
+        ttk.Button(frame_header, text="⬅ Kembali ke Dashboard", bootstyle="danger", command=self._go_dashboard).pack(side="right")
 
         frame_content = ttk.Frame(self)
         frame_content.pack(fill="both", expand=True, padx=20, pady=10)

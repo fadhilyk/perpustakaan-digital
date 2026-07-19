@@ -19,7 +19,7 @@ class AnggotaFrame(ttk.Frame):
         frame_header = ttk.Frame(self)
         frame_header.pack(fill="x", padx=20, pady=10)
         ttk.Label(frame_header, text="Kelola Data Anggota", font=("Helvetica", 20, "bold")).pack(side="left")
-        ttk.Button(frame_header, text="Kembali ke Dashboard", bootstyle="secondary outline", command=self._go_dashboard).pack(side="right")
+        ttk.Button(frame_header, text="⬅ Kembali ke Dashboard", bootstyle="danger", command=self._go_dashboard).pack(side="right")
 
         # Konten Terbelah (Kiri Form, Kanan Tabel)
         frame_content = ttk.Frame(self)

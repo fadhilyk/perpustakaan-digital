@@ -28,7 +28,7 @@ class LaporanFrame(ttk.Frame):
         frame_header_btn.pack(side="right")
         ttk.Button(frame_header_btn, text="Export Data", bootstyle="success", command=self._export_data).pack(side="left", padx=5)
         ttk.Button(frame_header_btn, text="Segarkan Data", bootstyle="info", command=self._load_data).pack(side="left", padx=5)
-        ttk.Button(frame_header_btn, text="Kembali ke Dashboard", bootstyle="secondary outline", command=self._go_dashboard).pack(side="left", padx=5)
+        ttk.Button(frame_header_btn, text="⬅ Kembali ke Dashboard", bootstyle="danger", command=self._go_dashboard).pack(side="left", padx=5)
 
         # Tab Menu Notebook menggunakan ttkbootstrap
         self.notebook = ttk.Notebook(self, bootstyle="info")
