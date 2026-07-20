@@ -25,5 +25,95 @@
         "tahun": 2019,
         "stok": 8,
         "id_kategori": 2
+    },
+    {
+        "id_buku": 4,
+        "judul": "Bumi Manusia",
+        "penulis": "Pramoedya Ananta Toer",
+        "penerbit": "Hasta Mitra",
+        "tahun": 1980,
+        "stok": 15,
+        "id_kategori": 1
+    },
+    {
+        "id_buku": 5,
+        "judul": "Cantik Itu Luka",
+        "penulis": "Eka Kurniawan",
+        "penerbit": "Gramedia",
+        "tahun": 2002,
+        "stok": 8,
+        "id_kategori": 1
+    },
+    {
+        "id_buku": 6,
+        "judul": "Sapiens: Riwayat Singkat Umat Manusia",
+        "penulis": "Yuval Noah Harari",
+        "penerbit": "Harvill Secker",
+        "tahun": 2011,
+        "stok": 7,
+        "id_kategori": 3
+    },
+    {
+        "id_buku": 7,
+        "judul": "Biografi Steve Jobs",
+        "penulis": "Walter Isaacson",
+        "penerbit": "Simon & Schuster",
+        "tahun": 2011,
+        "stok": 6,
+        "id_kategori": 3
+    },
+    {
+        "id_buku": 8,
+        "judul": "Atomic Habits",
+        "penulis": "James Clear",
+        "penerbit": "Avery",
+        "tahun": 2018,
+        "stok": 20,
+        "id_kategori": 5
+    },
+    {
+        "id_buku": 9,
+        "judul": "Filosofi Teras",
+        "penulis": "Henry Manampiring",
+        "penerbit": "Kompas",
+        "tahun": 2018,
+        "stok": 12,
+        "id_kategori": 5
+    },
+    {
+        "id_buku": 10,
+        "judul": "Sebuah Seni untuk Bersikap Bodo Amat",
+        "penulis": "Mark Manson",
+        "penerbit": "Gramedia",
+        "tahun": 2018,
+        "stok": 14,
+        "id_kategori": 5
+    },
+    {
+        "id_buku": 11,
+        "judul": "The Psychology of Money",
+        "penulis": "Morgan Housel",
+        "penerbit": "Harriman House",
+        "tahun": 2020,
+        "stok": 10,
+        "id_kategori": 4
+    },
+    {
+        "id_buku": 12,
+        "judul": "Rich Dad Poor Dad",
+        "penulis": "Robert Kiyosaki",
+        "penerbit": "Warner Books",
+        "tahun": 1997,
+        "stok": 18,
+        "id_kategori": 4
+    },
+    {
+        "id_buku": 13,
+        "judul": "A Brief History of Time",
+        "penulis": "Stephen Hawking",
+        "penerbit": "Bantam Books",
+        "tahun": 1988,
+        "stok": 5,
+        "id_kategori": 6
     }
 ]

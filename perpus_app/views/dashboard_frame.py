@@ -20,15 +20,18 @@ class DashboardFrame(ttk.Frame):
 
     def _get_stats(self):
         """Menghitung statistik ringkas dari seluruh service."""
-        total_buku    = len(self.facade.buku_service.get_all())
+        total_judul   = len(self.facade.buku_service.get_all())
         total_anggota = len(self.facade.anggota_service.get_all())
         try:
             all_pinjam    = self.facade.peminjaman_service.get_all()
             dipinjam      = sum(1 for p in all_pinjam if p.get_status() == StatusPeminjaman.DIPINJAM)
         except Exception:
             dipinjam = 0
-        tersedia = max(0, total_buku - dipinjam)
-        return total_buku, total_anggota, dipinjam, tersedia
+            
+        # Tersedia adalah total seluruh STOK fisik yang ada saat ini
+        tersedia = sum(b.stok for b in self.facade.buku_service.get_all())
+        
+        return total_judul, total_anggota, dipinjam, tersedia
 
     def _get_sapaan(self):
         """Mengembalikan sapaan dan simbol sesuai waktu saat ini."""
@@ -97,10 +100,10 @@ class DashboardFrame(ttk.Frame):
         ttk.Separator(self.container, orient="horizontal").pack(fill="x", pady=(0, 18))
 
         # ── Kartu Statistik ─────────────────────────────────────────────────
-        total_buku, total_anggota, dipinjam, tersedia = self._get_stats()
+        total_judul, total_anggota, dipinjam, tersedia = self._get_stats()
 
         stats = [
-            ("▣  Total Buku",    str(total_buku),    "primary"),
+            ("▣  Total Judul",   str(total_judul),   "primary"),
             ("◉  Total Anggota", str(total_anggota), "success"),
             ("↻  Dipinjam",      str(dipinjam),      "warning"),
             ("◆  Tersedia",      str(tersedia),      "info"),

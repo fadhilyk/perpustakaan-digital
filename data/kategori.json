@@ -8,5 +8,25 @@
         "id_kategori": 2,
         "nama_kategori": "Ilmu Komputer",
         "deskripsi": "Buku teknologi, pemrograman, hardware, dan IT."
+    },
+    {
+        "id_kategori": 3,
+        "nama_kategori": "Sejarah & Biografi",
+        "deskripsi": "Buku sejarah dan biografi tokoh."
+    },
+    {
+        "id_kategori": 4,
+        "nama_kategori": "Bisnis & Keuangan",
+        "deskripsi": "Buku ekonomi dan keuangan."
+    },
+    {
+        "id_kategori": 5,
+        "nama_kategori": "Psikologi & Self-Help",
+        "deskripsi": "Buku pengembangan diri."
+    },
+    {
+        "id_kategori": 6,
+        "nama_kategori": "Sains & Teknologi",
+        "deskripsi": "Buku ilmu pengetahuan dan alam."
     }
 ]
