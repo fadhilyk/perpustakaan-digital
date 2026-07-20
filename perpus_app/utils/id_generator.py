@@ -1,17 +1,6 @@
 from typing import Any
 
 def generate_id(items: list[Any], id_property: str) -> int:
-    """
-    Generate auto-increment ID berdasarkan sekumpulan item yang sudah ada.
-    Dapat menerima list of dictionary (data JSON mentah) atau list of object (data model).
-    
-    Args:
-        items: List item yang ada.
-        id_property: Nama atribut atau key yang menyimpan ID (misal: 'id_buku', 'id_pengguna').
-        
-    Returns:
-        int: ID baru yang dihasilkan.
-    """
     if not items:
         return 1
         

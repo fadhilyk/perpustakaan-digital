@@ -17,7 +17,6 @@ class PerpustakaanApp(ttk.Window):
         self.show_frame(start_frame_class)
 
     def show_frame(self, frame_class, *args, **kwargs):
-        """Menghancurkan frame lama, lalu merender ulang frame yang baru secara dinamis."""
         if self.current_frame:
             self.current_frame.destroy()
             

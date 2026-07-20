@@ -10,11 +10,6 @@ class BaseRepository(ABC):
 
     @abstractmethod
     def load(self) -> list[dict[str, Any]]:
-        """
-        Membaca data dari file JSON.
-        Setiap subclass WAJIB meng-override ini, tapi disarankan
-        untuk memanggil super().load() agar tidak mengulang kode (DRY).
-        """
         if not os.path.exists(self._filepath):
             # Jika file tidak ada, asumsikan datanya kosong (mencegah crash)
             return []
@@ -37,11 +32,6 @@ class BaseRepository(ABC):
 
     @abstractmethod
     def save(self, data: list[dict[str, Any]]) -> None:
-        """
-        Menyimpan data (list of dictionaries) ke dalam file JSON.
-        Setiap subclass WAJIB meng-override ini, tapi disarankan
-        untuk memanggil super().save(data).
-        """
         try:
             os.makedirs(os.path.dirname(self._filepath), exist_ok=True)
             with open(self._filepath, 'w', encoding='utf-8') as f:

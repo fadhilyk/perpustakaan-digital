@@ -50,7 +50,6 @@ class LaporanFrame(ttk.Frame):
         self._build_tab_anggota()
 
     def _build_tree(self, parent, columns, widths, headings):
-        """Helper internal untuk merender komponen Treeview lebih cepat secara seragam"""
         tree = ttk.Treeview(parent, columns=columns, show="headings", bootstyle="info")
         for col, heading, width in zip(columns, headings, widths):
             tree.heading(col, text=heading)
@@ -87,7 +86,6 @@ class LaporanFrame(ttk.Frame):
         self.tree_anggota = self._build_tree(self.tab_anggota, cols, widths, headings)
 
     def _load_data(self):
-        """Memanggil kelas Laporan pada Facade yang sudah mengekspor data dalam bentuk Dictionary Siap Saji"""
         # 1. Isi Laporan Daftar Buku
         for item in self.tree_buku.get_children():
             self.tree_buku.delete(item)

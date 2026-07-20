@@ -105,7 +105,6 @@ class BukuService:
         self._save_data()
 
     def cari_buku(self, keyword: str) -> list[Buku]:
-        """Pencarian multi-field (judul, penulis, kategori) (FR-09)"""
         keyword = keyword.lower()
         hasil = []
         for b in self.daftar_buku:

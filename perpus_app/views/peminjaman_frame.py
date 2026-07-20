@@ -99,7 +99,6 @@ class PeminjamanFrame(ttk.Frame):
             ))
 
     def _refresh_combos(self):
-        """Memuat ulang menu dropdown. Sangat penting dieksekusi sesudah transaksi terjadi (stok berkurang/bertambah)."""
         self.list_anggota = self.facade.anggota_service.get_all()
         # Seleksi array in-line yang membuang buku tanpa stok dari dropdown (Stabilitas Bisnis)
         self.list_buku = [b for b in self.facade.buku_service.get_all() if b.stok > 0]
@@ -113,7 +112,6 @@ class PeminjamanFrame(ttk.Frame):
         self.cb_buku.set("")
 
     def _load_data(self):
-        """Menyerap semua aktivitas transaksi ke dalam tabel."""
         pinjam_list = self.facade.peminjaman_service.get_all()
         
         toggle_empty_state(self.tree, getattr(self, 'scrollbar', None), getattr(self, 'empty_state_frame', None), len(pinjam_list) == 0)
@@ -123,7 +121,6 @@ class PeminjamanFrame(ttk.Frame):
         self.selected_id_pinjam = None
 
     def _on_select(self, event):
-        """Memicu unlock tombol kembalikan jika status transaksinya 'Aktif'."""
         selected = self.tree.selection()
         if selected:
             item = self.tree.item(selected[0])

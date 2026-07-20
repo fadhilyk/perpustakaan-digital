@@ -121,13 +121,11 @@ class BukuFrame(ttk.Frame):
             ))
 
     def _load_data(self):
-        """Memuat ulang semua data default tanpa filter pencarian."""
         self.ent_search.delete(0, "end")
         buku_list = self.facade.buku_service.get_all()
         self._render_tabel(buku_list)
 
     def _on_search(self):
-        """Memicu algoritma pencarian agresif berdasarkan judul/penulis/kategori."""
         keyword = self.ent_search.get().strip()
         if keyword:
             hasil = self.facade.buku_service.cari_buku(keyword)
@@ -169,7 +167,6 @@ class BukuFrame(ttk.Frame):
                 pass
 
     def _get_form_data(self):
-        """Helper internal untuk melakukan sanitasi ekstraksi input string ke tipe data yang sesuai"""
         judul = self.ent_judul.get().strip()
         penulis = self.ent_penulis.get().strip()
         penerbit = self.ent_penerbit.get().strip()

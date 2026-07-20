@@ -54,15 +54,9 @@ class Petugas(Pengguna):
         self._password_hash = password_hash
 
     def proses_pinjam(self, peminjaman: 'Peminjaman') -> None:
-        """
-        Sesuai desain, ini dikoordinasikan oleh PeminjamanService.
-        """
         pass
 
     def verifikasi(self, anggota: 'KelasAnggota') -> bool:
-        """
-        Verifikasi kelayakan anggota.
-        """
         return True
 
     # POLIMORFISME

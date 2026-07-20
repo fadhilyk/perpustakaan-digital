@@ -75,7 +75,6 @@ class KategoriFrame(ttk.Frame):
         self.tree.bind("<<TreeviewSelect>>", self._on_select)
 
     def _load_data(self):
-        """Memuat/me-refresh ulang data dari database JSON via Service"""
         # Bersihkan tabel lama
         for item in self.tree.get_children():
             self.tree.delete(item)
@@ -89,13 +88,11 @@ class KategoriFrame(ttk.Frame):
             self.tree.insert("", "end", values=(k.id_kategori, k.nama_kategori, k.deskripsi))
 
     def _clear_form(self):
-        """Mengosongkan kotak input dan menghapus flag seleksi data aktif"""
         self.selected_id = None
         self.ent_nama.delete(0, "end")
         self.ent_deskripsi.delete(0, "end")
 
     def _on_select(self, event):
-        """Meremote data dari tabel ke form jika baris diklik"""
         selected = self.tree.selection()
         if selected:
             item = self.tree.item(selected[0])

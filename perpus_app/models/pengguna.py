@@ -61,5 +61,4 @@ class Pengguna(ABC):
 
     @abstractmethod
     def tampilkan_info(self) -> str:
-        """Setiap turunan WAJIB override -> polymorphism."""
         pass

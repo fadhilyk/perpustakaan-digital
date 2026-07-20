@@ -69,11 +69,6 @@ class Peminjaman:
         return self._status
 
     def hitung_denda(self, tgl_kembali_aktual: str) -> float:
-        """
-        Menghitung denda berdasarkan selisih tgl_kembali_aktual dengan tgl_jatuh_tempo.
-        Jika belum jatuh tempo atau tepat waktu, denda = 0.0.
-        Format tanggal diharapkan: 'YYYY-MM-DD'
-        """
         fmt = "%Y-%m-%d"
         try:
             kembali = datetime.datetime.strptime(tgl_kembali_aktual, fmt).date()
@@ -86,10 +81,6 @@ class Peminjaman:
             return 0.0
 
     def kembalikan_buku(self, tgl_kembali_aktual: str = None) -> None:
-        """
-        Mengubah status menjadi dikembalikan, menyetel tanggal kembali,
-        dan menghitung kalkulasi denda keterlambatan secara otomatis.
-        """
         if not tgl_kembali_aktual:
             tgl_kembali_aktual = datetime.date.today().strftime("%Y-%m-%d")
             

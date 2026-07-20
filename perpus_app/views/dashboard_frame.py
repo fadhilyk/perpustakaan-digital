@@ -19,7 +19,6 @@ class DashboardFrame(ttk.Frame):
         self.bind("<Configure>", self._on_resize)
 
     def _get_stats(self):
-        """Menghitung statistik ringkas dari seluruh service."""
         total_judul   = len(self.facade.buku_service.get_all())
         total_anggota = len(self.facade.anggota_service.get_all())
         try:
@@ -34,7 +33,6 @@ class DashboardFrame(ttk.Frame):
         return total_judul, total_anggota, dipinjam, tersedia
 
     def _get_sapaan(self):
-        """Mengembalikan sapaan dan simbol sesuai waktu saat ini."""
         jam = datetime.now().hour
         if 5 <= jam < 11:
             return "Selamat Pagi", "\u2600️"   # ☀️
@@ -188,7 +186,6 @@ class DashboardFrame(ttk.Frame):
         ).pack(pady=(18, 0))
 
     def _typewriter(self):
-        """Menampilkan judul huruf per huruf layaknya sedang diketik."""
         if not self.winfo_exists():
             return
         if self._judul_idx <= len(self._judul_full):
@@ -203,7 +200,6 @@ class DashboardFrame(ttk.Frame):
             self._blink_cursor()
 
     def _blink_cursor(self):
-        """Mengkedipkan kursor | sebanyak 3x setelah typewriter selesai."""
         if not self.winfo_exists():
             return
         if self._blink_count < 6:
@@ -221,7 +217,6 @@ class DashboardFrame(ttk.Frame):
             )
 
     def _update_clock(self):
-        """Memperbarui label jam setiap 1 detik."""
         if not self.winfo_exists():
             return  # Hentikan jika frame sudah dihancurkan
         sekarang = datetime.now()
@@ -239,7 +234,6 @@ class DashboardFrame(ttk.Frame):
         self._clock_job = self.after(1000, self._update_clock)
 
     def _on_resize(self, event):
-        """Memindahkan kontainer ke tengah layar setiap kali ukuran frame berubah."""
         self.container.place(relx=0.5, rely=0.5, anchor="center")
 
     def _logout(self):

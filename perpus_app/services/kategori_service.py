@@ -11,7 +11,6 @@ class KategoriService:
         self._load_data()
 
     def _load_data(self) -> None:
-        """Memuat data JSON melalui repository dan memetakannya menjadi list of KategoriBuku."""
         data_dicts = self._repository.load()
         for row in data_dicts:
             kategori = KategoriBuku(
@@ -22,7 +21,6 @@ class KategoriService:
             self.daftar_kategori.append(kategori)
 
     def _save_data(self) -> None:
-        """Menyimpan list of KategoriBuku ke JSON melalui repository."""
         data_dicts = [
             {
                 "id_kategori": k.id_kategori,
@@ -37,14 +35,12 @@ class KategoriService:
         return self.daftar_kategori
 
     def get_by_id(self, id_kategori: int) -> KategoriBuku:
-        """Mencari kategori berdasarkan ID. Jika tak ketemu, raise exception spesifik."""
         for k in self.daftar_kategori:
             if k.id_kategori == id_kategori:
                 return k
         raise DataTidakDitemukanError(f"Kategori dengan ID {id_kategori} tidak ditemukan.")
 
     def tambah(self, nama_kategori: str, deskripsi: str = "") -> KategoriBuku:
-        """Membuat kategori baru, meng-*generate* ID, menambahkan ke memori lalu simpan ke JSON."""
         new_id = generate_id(self.daftar_kategori, "id_kategori")
         kategori = KategoriBuku(new_id, nama_kategori, deskripsi)
         self.daftar_kategori.append(kategori)
@@ -52,7 +48,6 @@ class KategoriService:
         return kategori
 
     def update(self, id_kategori: int, nama_kategori: str, deskripsi: str = "") -> KategoriBuku:
-        """Melakukan pembaruan atribut objek, kemudian memicu simpan ke JSON."""
         kategori = self.get_by_id(id_kategori)
         kategori.set_nama_kategori(nama_kategori)
         kategori.set_deskripsi(deskripsi)
@@ -60,7 +55,6 @@ class KategoriService:
         return kategori
 
     def hapus(self, id_kategori: int) -> None:
-        """Menghapus kategori asalkan kategori tersebut sedang tidak memiliki ikatan dengan buku mana pun."""
         kategori = self.get_by_id(id_kategori)
         
         # Mengecek apakah ada Buku dengan id_kategori tsb

@@ -12,10 +12,6 @@ from perpus_app.services.peminjaman_service import PeminjamanService
 from perpus_app.services.laporan import Laporan
 
 class Perpustakaan:
-    """
-    Facade dan Composition Root.
-    Mengelola dan menyatukan semua interaksi antar Service Layer.
-    """
     def __init__(self):
         # 1. Instansiasi Repositories
         self.kategori_repo = KategoriRepository()
@@ -43,10 +39,6 @@ class Perpustakaan:
         self._rekonstruksi_data()
 
     def _rekonstruksi_data(self) -> None:
-        """
-        Rekonstruksi semua relasi agregasi dan asosiasi di memori agar OOP utuh,
-        mengubah referensi by ID menjadi referensi by Object Instance.
-        """
         buku_list = self.buku_service.get_all()
         kategori_list = self.kategori_service.get_all()
         peminjaman_list = self.peminjaman_service.get_all()
@@ -84,14 +76,7 @@ class Perpustakaan:
             anggota.set_list_peminjaman(pinjaman_anggota)
 
     def daftar_anggota(self):
-        """
-        Mengembalikan daftar seluruh anggota yang sudah terintegrasi
-        secara in-memory beserta list_peminjaman-nya.
-        """
         return self.anggota_service.get_all()
 
     def tampilkan_laporan(self):
-        """
-        Mengembalikan instance Laporan yang bertugas membuat kompilasi data.
-        """
         return self.laporan

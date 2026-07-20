@@ -4,18 +4,12 @@ from perpus_app.services.peminjaman_service import PeminjamanService
 from perpus_app.services.anggota_service import AnggotaService
 
 class Laporan:
-    """
-    Service khusus untuk mengumpulkan, memformat, dan mengkalkulasi 
-    data laporan tanpa memodifikasi state aplikasi.
-    GUI dapat menerima data berbentuk list of dictionary untuk ditampilkan di Treeview.
-    """
     def __init__(self, buku_service: BukuService, peminjaman_service: PeminjamanService, anggota_service: AnggotaService):
         self._buku_service = buku_service
         self._peminjaman_service = peminjaman_service
         self._anggota_service = anggota_service
 
     def cetak_daftar_buku(self) -> List[Dict[str, Any]]:
-        """Mengembalikan rekap data buku beserta nama kategorinya."""
         buku_list = self._buku_service.get_all()
         laporan = []
         for b in buku_list:
@@ -32,7 +26,6 @@ class Laporan:
         return laporan
 
     def cetak_riwayat_transaksi(self) -> List[Dict[str, Any]]:
-        """Mengembalikan data seluruh riwayat peminjaman perpustakaan."""
         pinjam_list = self._peminjaman_service.get_all()
         laporan = []
         for p in pinjam_list:
@@ -53,10 +46,6 @@ class Laporan:
         return laporan
 
     def cetak_anggota_teraktif(self) -> List[Dict[str, Any]]:
-        """
-        Mengurutkan anggota dari yang riwayat transaksinya paling banyak (teraktif)
-        menuju yang paling sedikit, lalu mengembalikannya sebagai list.
-        """
         anggota_list = self._anggota_service.get_all()
         
         # Sorting dengan lambda expression berdasarkan jumlah elemen pada riwayat peminjaman

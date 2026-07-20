@@ -97,7 +97,6 @@ class AnggotaFrame(ttk.Frame):
             ))
 
     def _load_data(self):
-        """Memuat seluruh koleksi data Anggota via Service."""
         anggota_list = self.facade.anggota_service.get_all()
         self._render_tabel(anggota_list)
 
@@ -109,7 +108,6 @@ class AnggotaFrame(ttk.Frame):
         self.ent_alamat.delete(0, "end")
 
     def _on_select(self, event):
-        """Remote pengisian Data ke Form ketika ada yang terpilih di tabel."""
         selected = self.tree.selection()
         if selected:
             item = self.tree.item(selected[0])

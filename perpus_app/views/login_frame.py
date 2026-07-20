@@ -82,7 +82,6 @@ class LoginFrame(ttk.Frame):
         ).pack()
 
     def _toggle_password(self):
-        """Menampilkan atau menyembunyikan teks password."""
         self._show_password = not self._show_password
         if self._show_password:
             self.ent_password.config(show="")
@@ -111,13 +110,11 @@ class LoginFrame(ttk.Frame):
             self._shake()
 
     def _shake(self):
-        """Animasi getar kartu kiri-kanan saat login gagal."""
         # Gunakan offset relatif (relx) agar tidak meleset ke luar layar
         offsets = [0.02, -0.02, 0.016, -0.016, 0.01, -0.01, 0.005, -0.005, 0.0]
         self._shake_step(offsets, 0)
 
     def _shake_step(self, offsets, idx):
-        """Rekursif: geser kartu menggunakan relx relatif lalu kembalikan ke tengah."""
         if not self.winfo_exists():
             return
         if idx >= len(offsets):

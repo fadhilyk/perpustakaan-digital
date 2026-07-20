@@ -51,11 +51,9 @@ class PetugasService:
         raise DataTidakDitemukanError(f"Petugas dengan ID {id_pengguna} tidak ditemukan.")
 
     def _hash_password(self, password: str) -> str:
-        """Helper internal untuk mengubah password plaintext menjadi hash SHA-256."""
         return hashlib.sha256(password.encode('utf-8')).hexdigest()
 
     def _cek_username_unik(self, username: str) -> bool:
-        """Memeriksa keunikan username untuk mencegah pendaftaran ganda."""
         for p in self.daftar_petugas:
             if p.username == username:
                 return False
@@ -81,7 +79,6 @@ class PetugasService:
         return petugas
 
     def login(self, username: str, password: str) -> Petugas:
-        """Melakukan otentikasi berdasarkan kecocokan hash password."""
         password_hash = self._hash_password(password)
         for p in self.daftar_petugas:
             if p.username == username and p.password_hash == password_hash:

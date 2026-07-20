@@ -40,10 +40,6 @@ class Anggota(Pengguna):
         self._list_peminjaman = peminjaman_list
 
     def pinjam_buku(self, buku: 'Buku') -> None:
-        """
-        Sesuai SDD, mendelegasikan ke PeminjamanService.
-        Anggota tidak menulis file sendiri agar tidak melanggar layering.
-        """
         pass
 
     def get_aktif(self) -> list['Peminjaman']:
