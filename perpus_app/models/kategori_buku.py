@@ -29,8 +29,10 @@ class KategoriBuku:
         return self._nama_kategori
 
     def set_nama_kategori(self, nama_kategori: str) -> None:
+        # INPUT VALIDASI
         valid, pesan = validasi_teks(nama_kategori, "Nama Kategori")
         if not valid:
+            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._nama_kategori = str(nama_kategori).strip()
 

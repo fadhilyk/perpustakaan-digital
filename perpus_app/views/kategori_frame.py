@@ -105,6 +105,7 @@ class KategoriFrame(ttk.Frame):
     def _on_tambah(self):
         nama = self.ent_nama.get().strip()
         desk = self.ent_deskripsi.get().strip()
+        # EXCEPTION HANDLING
         try:
             self.facade.kategori_service.tambah(nama, desk)
             self._clear_form()
@@ -123,6 +124,7 @@ class KategoriFrame(ttk.Frame):
             
         nama = self.ent_nama.get().strip()
         desk = self.ent_deskripsi.get().strip()
+        # EXCEPTION HANDLING
         try:
             self.facade.kategori_service.update(self.selected_id, nama, desk)
             self._clear_form()
@@ -139,6 +141,7 @@ class KategoriFrame(ttk.Frame):
         konfirm = Messagebox.yesno(f"Yakin ingin menghapus kategori dengan ID {self.selected_id}?", "Konfirmasi Penghapusan")
         # Nilai balikan (return) dari Messagebox ttkbootstrap pada yesno adalah tombol yg diklik ('Yes', 'No')
         if konfirm == "Yes":
+            # EXCEPTION HANDLING
             try:
                 self.facade.kategori_service.hapus(self.selected_id)
                 self._clear_form()

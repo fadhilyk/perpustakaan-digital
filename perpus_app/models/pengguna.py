@@ -36,8 +36,10 @@ class Pengguna(ABC):
         return self._nama
 
     def set_nama(self, nama: str) -> None:
+        # INPUT VALIDASI
         valid, pesan = validasi_teks(nama, "Nama Pengguna")
         if not valid:
+            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._nama = str(nama).strip()
         
@@ -45,8 +47,10 @@ class Pengguna(ABC):
         return self._no_telepon
         
     def set_no_telepon(self, no_telepon: str) -> None:
+        # INPUT VALIDASI
         valid, pesan = validasi_no_telepon(no_telepon)
         if not valid:
+            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._no_telepon = str(no_telepon).strip()
         
@@ -54,8 +58,10 @@ class Pengguna(ABC):
         return self._email
         
     def set_email(self, email: str) -> None:
+        # INPUT VALIDASI
         valid, pesan = validasi_email(email)
         if not valid:
+            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._email = str(email).strip()
 

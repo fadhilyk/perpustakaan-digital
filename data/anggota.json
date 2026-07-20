@@ -12,5 +12,54 @@
         "no_telepon": "081987654321",
         "email": "siti.aminah@email.com",
         "alamat": "Jl. Asia Afrika No 45, Bandung"
+    },
+    {
+        "id_pengguna": 3,
+        "nama": "Andi Saputra",
+        "no_telepon": "081234511223",
+        "email": "andi.saputra@email.com",
+        "alamat": "Jl. Merpati No 5, Jakarta"
+    },
+    {
+        "id_pengguna": 4,
+        "nama": "Rina Melati",
+        "no_telepon": "081987655443",
+        "email": "rina.melati@email.com",
+        "alamat": "Jl. Kenanga No 10, Bandung"
+    },
+    {
+        "id_pengguna": 5,
+        "nama": "Doni Pratama",
+        "no_telepon": "085612347788",
+        "email": "doni.pratama@email.com",
+        "alamat": "Jl. Mawar No 2, Surabaya"
+    },
+    {
+        "id_pengguna": 6,
+        "nama": "Maya Wulandari",
+        "no_telepon": "081345678899",
+        "email": "maya.w@email.com",
+        "alamat": "Jl. Anggrek No 15, Yogyakarta"
+    },
+    {
+        "id_pengguna": 7,
+        "nama": "Fajar Nugroho",
+        "no_telepon": "087766554433",
+        "email": "fajar.nugroho@email.com",
+        "alamat": "Jl. Pahlawan No 8, Semarang"
+    },
+    {
+        "id_pengguna": 8,
+        "nama": "Siska Oktavia",
+        "no_telepon": "081122334455",
+        "email": "siska.oktavia@email.com",
+        "alamat": "Jl. Diponegoro No 45, Malang"
+    },
+    {
+        "id_pengguna": 9,
+        "nama": "Reza Rahadian",
+        "no_telepon": "082233445566",
+        "email": "reza.r@email.com",
+        "alamat": "Jl. Sudirman No 99, Medan"
     }
 ]

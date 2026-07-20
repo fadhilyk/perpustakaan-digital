@@ -62,6 +62,7 @@ class PeminjamanService:
         for p in self.daftar_pinjam:
             if p.id_pinjam == id_pinjam:
                 return p
+        # FAULT HANDLING
         raise DataTidakDitemukanError(f"Transaksi Peminjaman dengan ID {id_pinjam} tidak ditemukan.")
 
     def pinjam_buku(self, id_anggota: int, id_buku: int, id_petugas: int) -> Peminjaman:
@@ -112,6 +113,7 @@ class PeminjamanService:
         pinjam = self.get_by_id(id_pinjam)
         
         if pinjam.status == StatusPeminjaman.DIKEMBALIKAN:
+            # FAULT HANDLING
             raise ValidasiError(f"Buku untuk transaksi ID {id_pinjam} sudah dikembalikan sebelumnya.")
             
         # 1. Update status peminjaman (juga memicu kalkulasi denda otomatis)

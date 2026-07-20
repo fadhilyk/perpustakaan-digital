@@ -42,8 +42,10 @@ class Buku:
         return self._judul
 
     def set_judul(self, judul: str) -> None:
+        # INPUT VALIDASI
         valid, pesan = validasi_teks(judul, "Judul Buku")
         if not valid:
+            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._judul = str(judul).strip()
 
@@ -55,8 +57,10 @@ class Buku:
         return self._penulis
 
     def set_penulis(self, penulis: str) -> None:
+        # INPUT VALIDASI
         valid, pesan = validasi_teks(penulis, "Penulis")
         if not valid:
+            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._penulis = str(penulis).strip()
 
@@ -68,8 +72,10 @@ class Buku:
         return self._penerbit
 
     def set_penerbit(self, penerbit: str) -> None:
+        # INPUT VALIDASI
         valid, pesan = validasi_teks(penerbit, "Penerbit")
         if not valid:
+            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._penerbit = str(penerbit).strip()
 
@@ -81,8 +87,10 @@ class Buku:
         return self._tahun
 
     def set_tahun(self, tahun: int | str) -> None:
+        # INPUT VALIDASI
         valid, pesan = validasi_tahun_terbit(tahun)
         if not valid:
+            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._tahun = int(tahun)
 
@@ -94,8 +102,10 @@ class Buku:
         return self._stok
 
     def set_stok(self, stok: int | str) -> None:
+        # INPUT VALIDASI
         valid, pesan = validasi_stok(stok)
         if not valid:
+            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._stok = int(stok)
 
@@ -112,6 +122,7 @@ class Buku:
 
     def kurangi_stok(self, jumlah: int = 1) -> None:
         if self._stok - jumlah < 0:
+            # FAULT HANDLING
             raise StokTidakCukupError(f"Stok buku '{self._judul}' tidak mencukupi. Sisa stok: {self._stok}.")
         self._stok -= jumlah
 

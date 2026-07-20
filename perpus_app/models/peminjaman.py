@@ -70,6 +70,7 @@ class Peminjaman:
 
     def hitung_denda(self, tgl_kembali_aktual: str) -> float:
         fmt = "%Y-%m-%d"
+        # EXCEPTION HANDLING
         try:
             kembali = datetime.datetime.strptime(tgl_kembali_aktual, fmt).date()
             jatuh_tempo = datetime.datetime.strptime(self._tgl_jatuh_tempo, fmt).date()

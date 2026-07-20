@@ -42,6 +42,7 @@ class AnggotaService:
         for a in self.daftar_anggota:
             if a.id_pengguna == id_anggota:
                 return a
+        # FAULT HANDLING
         raise DataTidakDitemukanError(f"Anggota dengan ID {id_anggota} tidak ditemukan.")
 
     def tambah(self, nama: str, no_telepon: str, email: str, alamat: str) -> Anggota:
@@ -66,6 +67,7 @@ class AnggotaService:
         # Opsi integritas: Kita bisa memblokir jika anggota memiliki pinjaman aktif, 
         # namun untuk saat ini difokuskan pada CRUD dasar
         if len(anggota.get_aktif()) > 0:
+            # FAULT HANDLING
             raise ValidasiError(f"Anggota {anggota.nama} masih memiliki {len(anggota.get_aktif())} pinjaman aktif. Tidak bisa dihapus.")
             
         self.daftar_anggota.remove(anggota)

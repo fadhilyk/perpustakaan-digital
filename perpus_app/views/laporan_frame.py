@@ -3,6 +3,7 @@ import csv
 from tkinter import filedialog
 from ttkbootstrap.dialogs import Messagebox
 
+# EXCEPTION HANDLING
 try:
     import openpyxl
     HAS_OPENPYXL = True
@@ -151,6 +152,7 @@ class LaporanFrame(ttk.Frame):
         columns = [tree.heading(col)["text"] for col in tree["columns"]]
         rows = [tree.item(item)["values"] for item in tree.get_children()]
             
+        # EXCEPTION HANDLING
         try:
             if filepath.endswith('.csv'):
                 with open(filepath, mode='w', newline='', encoding='utf-8') as f:

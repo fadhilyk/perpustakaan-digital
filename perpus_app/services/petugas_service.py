@@ -48,6 +48,7 @@ class PetugasService:
         for p in self.daftar_petugas:
             if p.id_pengguna == id_pengguna:
                 return p
+        # FAULT HANDLING
         raise DataTidakDitemukanError(f"Petugas dengan ID {id_pengguna} tidak ditemukan.")
 
     def _hash_password(self, password: str) -> str:
@@ -62,12 +63,15 @@ class PetugasService:
     def registrasi(self, nama: str, no_telepon: str, email: str, jabatan: str, 
                    username: str, password: str, konfirmasi_password: str) -> Petugas:
         # Validasi kesesuaian dan panjang minimal password
+        # INPUT VALIDASI
         valid, pesan = validasi_password(password, konfirmasi_password)
         if not valid:
+            # FAULT HANDLING
             raise ValidasiError(pesan)
             
         # Pengecekan username unik agar tidak terjadi tabrakan identitas
         if not self._cek_username_unik(username):
+            # FAULT HANDLING
             raise AutentikasiError(f"Username '{username}' sudah terdaftar!")
             
         new_id = generate_id(self.daftar_petugas, "id_pengguna")
@@ -86,4 +90,5 @@ class PetugasService:
                 
         # Sengaja pesannya digeneralisir agar hacker tidak bisa brute-force 
         # menebak username saja atau password saja.
+        # FAULT HANDLING
         raise AutentikasiError("Username atau password salah!")

@@ -151,6 +151,7 @@ class RegisterPetugasFrame(ttk.Frame):
         password = self.ent_password.get()
         konfirm  = self.ent_konfirm.get()
 
+        # EXCEPTION HANDLING
         try:
             self.facade.petugas_service.registrasi(
                 nama, notelp, email, jabatan, username, password, konfirm

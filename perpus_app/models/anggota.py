@@ -27,8 +27,10 @@ class Anggota(Pengguna):
         return self._alamat
 
     def set_alamat(self, alamat: str) -> None:
+        # INPUT VALIDASI
         valid, pesan = validasi_teks(alamat, "Alamat")
         if not valid:
+            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._alamat = str(alamat).strip()
 

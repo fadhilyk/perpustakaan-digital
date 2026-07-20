@@ -49,13 +49,16 @@ class BukuService:
         for b in self.daftar_buku:
             if b.id_buku == id_buku:
                 return b
+        # FAULT HANDLING
         raise DataTidakDitemukanError(f"Buku dengan ID {id_buku} tidak ditemukan.")
 
     def tambah_buku(self, judul: str, penulis: str, penerbit: str, tahun: int, stok: int, id_kategori: int) -> Buku:
         # Validasi id_kategori sesuai instruksi
+        # EXCEPTION HANDLING
         try:
             kategori = self._kategori_service.get_by_id(id_kategori)
         except DataTidakDitemukanError:
+            # FAULT HANDLING
             raise ValidasiError(f"Kategori dengan ID {id_kategori} tidak ditemukan atau tidak valid.")
 
         new_id = generate_id(self.daftar_buku, "id_buku")
@@ -70,9 +73,11 @@ class BukuService:
         return buku
 
     def update_buku(self, id_buku: int, judul: str, penulis: str, penerbit: str, tahun: int, stok: int, id_kategori: int) -> Buku:
+        # EXCEPTION HANDLING
         try:
             kategori = self._kategori_service.get_by_id(id_kategori)
         except DataTidakDitemukanError:
+            # FAULT HANDLING
             raise ValidasiError(f"Kategori dengan ID {id_kategori} tidak ditemukan atau tidak valid.")
             
         buku = self.get_by_id(id_buku)

@@ -21,6 +21,7 @@ class DashboardFrame(ttk.Frame):
     def _get_stats(self):
         total_judul   = len(self.facade.buku_service.get_all())
         total_anggota = len(self.facade.anggota_service.get_all())
+        # EXCEPTION HANDLING
         try:
             all_pinjam    = self.facade.peminjaman_service.get_all()
             dipinjam      = sum(1 for p in all_pinjam if p.get_status() == StatusPeminjaman.DIPINJAM)

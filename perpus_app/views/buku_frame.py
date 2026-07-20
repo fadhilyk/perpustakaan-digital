@@ -151,6 +151,7 @@ class BukuFrame(ttk.Frame):
             self.selected_id = int(val[0])
             
             # Kita mengambil data utuh dari service untuk mengisi form secara aman
+            # EXCEPTION HANDLING
             try:
                 buku = self.facade.buku_service.get_by_id(self.selected_id)
                 self.ent_judul.insert(0, buku.judul)
@@ -171,18 +172,23 @@ class BukuFrame(ttk.Frame):
         penulis = self.ent_penulis.get().strip()
         penerbit = self.ent_penerbit.get().strip()
         
+        # EXCEPTION HANDLING
         try:
             tahun = int(self.ent_tahun.get().strip())
         except ValueError:
+            # FAULT HANDLING
             raise AppError("Input 'Tahun' harus berupa format angka bulat (misal: 2023).")
             
+        # EXCEPTION HANDLING
         try:
             stok = int(self.ent_stok.get().strip())
         except ValueError:
+            # FAULT HANDLING
             raise AppError("Input 'Stok' harus berupa angka numerik.")
             
         kat_val = self.cb_kategori.get()
         if not kat_val:
+            # FAULT HANDLING
             raise AppError("Silakan tentukan Kategori melalui pilihan dropdown Combobox.")
             
         # Ekstrak digit pertama dari pola "ID - Nama"
@@ -190,6 +196,7 @@ class BukuFrame(ttk.Frame):
         return judul, penulis, penerbit, tahun, stok, id_kategori
 
     def _on_tambah(self):
+        # EXCEPTION HANDLING
         try:
             judul, penulis, penerbit, tahun, stok, id_kategori = self._get_form_data()
             self.facade.buku_service.tambah_buku(judul, penulis, penerbit, tahun, stok, id_kategori)
@@ -207,6 +214,7 @@ class BukuFrame(ttk.Frame):
             Messagebox.show_warning("Tentukan buku mana yang mau diupdate dengan mengekliknya di tabel.", "Pemilihan Wajib")
             return
             
+        # EXCEPTION HANDLING
         try:
             judul, penulis, penerbit, tahun, stok, id_kategori = self._get_form_data()
             self.facade.buku_service.update_buku(self.selected_id, judul, penulis, penerbit, tahun, stok, id_kategori)
@@ -226,6 +234,7 @@ class BukuFrame(ttk.Frame):
             
         konfirm = Messagebox.yesno(f"Anda yakin akan menghapus data buku ID {self.selected_id}?", "Verifikasi Hapus")
         if konfirm == "Yes":
+            # EXCEPTION HANDLING
             try:
                 self.facade.buku_service.hapus_buku(self.selected_id)
                 self._clear_form()

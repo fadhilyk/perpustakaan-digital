@@ -129,6 +129,7 @@ class AnggotaFrame(ttk.Frame):
         return nama, notelp, email, alamat
 
     def _on_tambah(self):
+        # EXCEPTION HANDLING
         try:
             nama, notelp, email, alamat = self._get_form_data()
             self.facade.anggota_service.tambah(nama, notelp, email, alamat)
@@ -145,6 +146,7 @@ class AnggotaFrame(ttk.Frame):
         if not self.selected_id:
             Messagebox.show_warning("Mohon pilih baris data di tabel yang mau Anda perbarui.", "Peringatan Pemilihan")
             return
+        # EXCEPTION HANDLING
         try:
             nama, notelp, email, alamat = self._get_form_data()
             self.facade.anggota_service.update(self.selected_id, nama, notelp, email, alamat)
@@ -164,6 +166,7 @@ class AnggotaFrame(ttk.Frame):
             
         konfirm = Messagebox.yesno(f"Anda sangat yakin untuk menghapus Anggota ID {self.selected_id} selamanya?", "Konfirmasi Eksekusi")
         if konfirm == "Yes":
+            # EXCEPTION HANDLING
             try:
                 self.facade.anggota_service.hapus(self.selected_id)
                 self._clear_form()

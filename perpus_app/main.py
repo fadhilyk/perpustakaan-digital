@@ -17,6 +17,7 @@ def main():
     if not os.path.exists(path_petugas):
         start_frame = RegisterPetugasFrame
     else:
+        # EXCEPTION HANDLING
         try:
             with open(path_petugas, 'r', encoding='utf-8') as f:
                 data = json.load(f)

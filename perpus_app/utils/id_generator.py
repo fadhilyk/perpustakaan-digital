@@ -8,11 +8,13 @@ def generate_id(items: list[Any], id_property: str) -> int:
     for item in items:
         if isinstance(item, dict):
             if id_property in item:
+                # EXCEPTION HANDLING
                 try:
                     ids.append(int(item[id_property]))
                 except (ValueError, TypeError):
                     pass
         elif hasattr(item, id_property):
+            # EXCEPTION HANDLING
             try:
                 ids.append(int(getattr(item, id_property)))
             except (ValueError, TypeError):

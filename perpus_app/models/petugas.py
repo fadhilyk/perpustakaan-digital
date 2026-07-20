@@ -28,8 +28,10 @@ class Petugas(Pengguna):
         return self._jabatan
 
     def set_jabatan(self, jabatan: str) -> None:
+        # INPUT VALIDASI
         valid, pesan = validasi_teks(jabatan, "Jabatan")
         if not valid:
+            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._jabatan = str(jabatan).strip()
 
@@ -41,8 +43,10 @@ class Petugas(Pengguna):
         return self._username
 
     def set_username(self, username: str) -> None:
+        # INPUT VALIDASI
         valid, pesan = validasi_username(username)
         if not valid:
+            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._username = str(username).strip()
         

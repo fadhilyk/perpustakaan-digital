@@ -95,6 +95,7 @@ class LoginFrame(ttk.Frame):
         username = self.ent_username.get().strip()
         password = self.ent_password.get()
 
+        # EXCEPTION HANDLING
         try:
             petugas = self.facade.petugas_service.login(username, password)
             self.facade.petugas_aktif = petugas

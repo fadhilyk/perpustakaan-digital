@@ -19,6 +19,7 @@ class IconManager:
             print(f"[Warning] Icon not found: {icon_path}")
             return None
             
+        # EXCEPTION HANDLING
         try:
             img = Image.open(icon_path)
             if img.size != size:

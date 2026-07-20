@@ -153,6 +153,7 @@ class PeminjamanFrame(ttk.Frame):
             
         id_petugas = petugas.id_pengguna
         
+        # EXCEPTION HANDLING
         try:
             self.facade.peminjaman_service.pinjam_buku(id_anggota, id_buku, id_petugas)
             self._load_data()
@@ -170,6 +171,7 @@ class PeminjamanFrame(ttk.Frame):
             
         konfirm = Messagebox.yesno(f"Setujui pengembalian untuk ID Transaksi {self.selected_id_pinjam}?\n(Denda otomatis dihitung).", "Konfirmasi Laporan Kembali")
         if konfirm == "Yes":
+            # EXCEPTION HANDLING
             try:
                 self.facade.peminjaman_service.kembalikan_buku(self.selected_id_pinjam)
                 self._load_data()
