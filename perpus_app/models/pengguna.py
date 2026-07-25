@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 from perpus_app.utils.validators import validasi_teks, validasi_email, validasi_no_telepon
 from perpus_app.exceptions.app_exceptions import ValidasiError
 
-# ABSTRAKSI
 class Pengguna(ABC):
     def __init__(self, id_pengguna: int, nama: str, no_telepon: str, email: str):
         self._id_pengguna = id_pengguna
@@ -10,7 +9,6 @@ class Pengguna(ABC):
         self._no_telepon = ""
         self._email = ""
         
-        # Validasi otomatis saat inisialisasi dengan menggunakan setter
         self.set_nama(nama)
         self.set_no_telepon(no_telepon)
         self.set_email(email)
@@ -19,7 +17,6 @@ class Pengguna(ABC):
     def id_pengguna(self) -> int:
         return self._id_pengguna
 
-    # ENKAPSULASI
     @property
     def nama(self) -> str:
         return self._nama
@@ -36,10 +33,8 @@ class Pengguna(ABC):
         return self._nama
 
     def set_nama(self, nama: str) -> None:
-        # INPUT VALIDASI
         valid, pesan = validasi_teks(nama, "Nama Pengguna")
         if not valid:
-            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._nama = str(nama).strip()
         
@@ -47,10 +42,8 @@ class Pengguna(ABC):
         return self._no_telepon
         
     def set_no_telepon(self, no_telepon: str) -> None:
-        # INPUT VALIDASI
         valid, pesan = validasi_no_telepon(no_telepon)
         if not valid:
-            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._no_telepon = str(no_telepon).strip()
         
@@ -58,10 +51,8 @@ class Pengguna(ABC):
         return self._email
         
     def set_email(self, email: str) -> None:
-        # INPUT VALIDASI
         valid, pesan = validasi_email(email)
         if not valid:
-            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._email = str(email).strip()
 

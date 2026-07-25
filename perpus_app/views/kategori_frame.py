@@ -15,17 +15,14 @@ class KategoriFrame(ttk.Frame):
         self._load_data()
 
     def _build_ui(self):
-        # Bagian Header
         frame_header = ttk.Frame(self)
         frame_header.pack(fill="x", padx=20, pady=10)
         ttk.Label(frame_header, text="Kelola Kategori Buku", font=("Helvetica", 20, "bold")).pack(side="left")
         ttk.Button(frame_header, text="⬅ Kembali ke Dashboard", bootstyle="danger", command=self._go_dashboard).pack(side="right")
 
-        # Kontainer Utama di bawah Header
         frame_content = ttk.Frame(self)
         frame_content.pack(fill="both", expand=True, padx=20, pady=10)
 
-        # Panel Kiri: Area Form Tambah/Ubah
         frame_form = ttk.Labelframe(frame_content, text="Form Kategori", padding=15)
         frame_form.pack(side="left", fill="y", padx=(0, 15))
 
@@ -37,7 +34,6 @@ class KategoriFrame(ttk.Frame):
         self.ent_deskripsi = ttk.Entry(frame_form, width=30)
         self.ent_deskripsi.pack(fill="x", pady=(0, 10))
 
-        # Kumpulan Tombol Aksi di dalam Form
         frame_action = ttk.Frame(frame_form)
         frame_action.pack(fill="x", pady=15)
         
@@ -47,7 +43,6 @@ class KategoriFrame(ttk.Frame):
         
         ttk.Button(frame_form, text="Bersihkan Pilihan", bootstyle="outline-secondary", command=self._clear_form).pack(fill="x")
 
-        # Panel Kanan: Tabel Data (Treeview)
         frame_table = ttk.Frame(frame_content)
         frame_table.pack(side="right", fill="both", expand=True)
         
@@ -57,12 +52,10 @@ class KategoriFrame(ttk.Frame):
         self.tree.heading("nama", text="Nama Kategori")
         self.tree.heading("deskripsi", text="Deskripsi")
         
-        # Konfigurasi lebar kolom
         self.tree.column("id", width=60, anchor="center")
         self.tree.column("nama", width=180)
         self.tree.column("deskripsi", width=350)
         
-        # Penambahan scrollbar agar list panjang bisa digeser
         self.scrollbar = ttk.Scrollbar(frame_table, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=self.scrollbar.set)
         
@@ -71,15 +64,12 @@ class KategoriFrame(ttk.Frame):
 
         self.empty_state_frame = setup_empty_state(frame_table, "Belum ada Kategori. Silakan tambah data baru.")
         
-        # Bind aksi ketika baris tabel diklik
         self.tree.bind("<<TreeviewSelect>>", self._on_select)
 
     def _load_data(self):
-        # Bersihkan tabel lama
         for item in self.tree.get_children():
             self.tree.delete(item)
             
-        # Panggil service untuk daftar seluruh kategori
         kategori_list = self.facade.kategori_service.get_all()
         
         toggle_empty_state(self.tree, self.scrollbar, self.empty_state_frame, len(kategori_list) == 0)
@@ -105,7 +95,6 @@ class KategoriFrame(ttk.Frame):
     def _on_tambah(self):
         nama = self.ent_nama.get().strip()
         desk = self.ent_deskripsi.get().strip()
-        # EXCEPTION HANDLING
         try:
             self.facade.kategori_service.tambah(nama, desk)
             self._clear_form()
@@ -124,7 +113,6 @@ class KategoriFrame(ttk.Frame):
             
         nama = self.ent_nama.get().strip()
         desk = self.ent_deskripsi.get().strip()
-        # EXCEPTION HANDLING
         try:
             self.facade.kategori_service.update(self.selected_id, nama, desk)
             self._clear_form()
@@ -139,16 +127,13 @@ class KategoriFrame(ttk.Frame):
             return
             
         konfirm = Messagebox.yesno(f"Yakin ingin menghapus kategori dengan ID {self.selected_id}?", "Konfirmasi Penghapusan")
-        # Nilai balikan (return) dari Messagebox ttkbootstrap pada yesno adalah tombol yg diklik ('Yes', 'No')
         if konfirm == "Yes":
-            # EXCEPTION HANDLING
             try:
                 self.facade.kategori_service.hapus(self.selected_id)
                 self._clear_form()
                 self._load_data()
                 ToastNotification(title="Dihapus", message="Kategori telah berhasil dihapus dari peredaran.", duration=3000, bootstyle="warning").show_toast()
             except AppError as e:
-                # Menangkap KategoriMasihDipakaiError jika masih ada relasi buku
                 Messagebox.show_error(str(e), "Tidak Dapat Dihapus")
             except Exception as e:
                 print(f"[System Log] Error tidak terduga pada Hapus Kategori: {e}")

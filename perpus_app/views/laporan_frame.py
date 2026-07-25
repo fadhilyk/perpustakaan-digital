@@ -3,7 +3,6 @@ import csv
 from tkinter import filedialog
 from ttkbootstrap.dialogs import Messagebox
 
-# EXCEPTION HANDLING
 try:
     import openpyxl
     HAS_OPENPYXL = True
@@ -19,33 +18,27 @@ class LaporanFrame(ttk.Frame):
         self._load_data()
 
     def _build_ui(self):
-        # Header Aplikasi
         frame_header = ttk.Frame(self)
         frame_header.pack(fill="x", padx=20, pady=10)
         ttk.Label(frame_header, text="Laporan & Statistik", font=("Helvetica", 20, "bold")).pack(side="left")
         
-        # Tombol Export, Segarkan dan Kembali
         frame_header_btn = ttk.Frame(frame_header)
         frame_header_btn.pack(side="right")
         ttk.Button(frame_header_btn, text="Export Data", bootstyle="success", command=self._export_data).pack(side="left", padx=5)
         ttk.Button(frame_header_btn, text="Segarkan Data", bootstyle="info", command=self._load_data).pack(side="left", padx=5)
         ttk.Button(frame_header_btn, text="⬅ Kembali ke Dashboard", bootstyle="danger", command=self._go_dashboard).pack(side="left", padx=5)
 
-        # Tab Menu Notebook menggunakan ttkbootstrap
         self.notebook = ttk.Notebook(self, bootstyle="info")
         self.notebook.pack(fill="both", expand=True, padx=20, pady=10)
 
-        # Tab 1: Daftar Buku
         self.tab_buku = ttk.Frame(self.notebook, padding=10)
         self.notebook.add(self.tab_buku, text="Laporan Daftar Buku")
         self._build_tab_buku()
 
-        # Tab 2: Riwayat Transaksi
         self.tab_transaksi = ttk.Frame(self.notebook, padding=10)
         self.notebook.add(self.tab_transaksi, text="Laporan Riwayat Transaksi")
         self._build_tab_transaksi()
 
-        # Tab 3: Anggota Teraktif
         self.tab_anggota = ttk.Frame(self.notebook, padding=10)
         self.notebook.add(self.tab_anggota, text="Statistik Anggota Teraktif")
         self._build_tab_anggota()
@@ -54,11 +47,9 @@ class LaporanFrame(ttk.Frame):
         tree = ttk.Treeview(parent, columns=columns, show="headings", bootstyle="info")
         for col, heading, width in zip(columns, headings, widths):
             tree.heading(col, text=heading)
-            # Penyelarasan: Jika tipe data umumnya integer (ID, Tahun, Stok), taruh di center
             anchor_pos = "center" if col in ["id", "tahun", "stok", "id_pinjam", "id_anggota", "pinjaman_aktif", "total_riwayat"] else "w"
             tree.column(col, width=width, anchor=anchor_pos)
             
-        # Gulir vertikal
         scrollbar = ttk.Scrollbar(parent, orient="vertical", command=tree.yview)
         tree.configure(yscrollcommand=scrollbar.set)
         scrollbar.pack(side="right", fill="y")
@@ -77,7 +68,6 @@ class LaporanFrame(ttk.Frame):
         headings = ("ID Pinjam", "Anggota", "Buku", "Petugas", "Tgl Pinjam", "Tgl Kembali", "Status", "Denda")
         widths = (80, 150, 200, 150, 100, 100, 100, 100)
         self.tree_transaksi = self._build_tree(self.tab_transaksi, cols, widths, headings)
-        # Khusus denda, agar rata kanan (seperti uang)
         self.tree_transaksi.column("denda", anchor="e")
 
     def _build_tab_anggota(self):
@@ -87,7 +77,6 @@ class LaporanFrame(ttk.Frame):
         self.tree_anggota = self._build_tree(self.tab_anggota, cols, widths, headings)
 
     def _load_data(self):
-        # 1. Isi Laporan Daftar Buku
         for item in self.tree_buku.get_children():
             self.tree_buku.delete(item)
         data_buku = self.facade.laporan.cetak_daftar_buku()
@@ -96,7 +85,6 @@ class LaporanFrame(ttk.Frame):
                 row["ID"], row["Judul"], row["Penulis"], row["Kategori"], row["Tahun"], row["Stok"], row["Status"]
             ))
             
-        # 2. Isi Laporan Data Riwayat Transaksi (Termasuk histori denda)
         for item in self.tree_transaksi.get_children():
             self.tree_transaksi.delete(item)
         data_trx = self.facade.laporan.cetak_riwayat_transaksi()
@@ -106,7 +94,6 @@ class LaporanFrame(ttk.Frame):
                 row["Tgl Pinjam"], row["Tgl Kembali"], row["Status"], f"Rp {int(row['Denda'])}"
             ))
 
-        # 3. Isi Laporan Data Anggota Paling Aktif (Klasemen)
         for item in self.tree_anggota.get_children():
             self.tree_anggota.delete(item)
         data_anggota = self.facade.laporan.cetak_anggota_teraktif()
@@ -121,7 +108,6 @@ class LaporanFrame(ttk.Frame):
         self.master.show_frame(DashboardFrame)
 
     def _export_data(self):
-        # Deteksi tab mana yang sedang aktif dilihat oleh user
         current_tab = self.notebook.index(self.notebook.select())
         
         if current_tab == 0:
@@ -148,11 +134,9 @@ class LaporanFrame(ttk.Frame):
         if not filepath:
             return # Dibatalkan oleh user
             
-        # Ekstrak data dari tabel GUI (Treeview)
         columns = [tree.heading(col)["text"] for col in tree["columns"]]
         rows = [tree.item(item)["values"] for item in tree.get_children()]
             
-        # EXCEPTION HANDLING
         try:
             if filepath.endswith('.csv'):
                 with open(filepath, mode='w', newline='', encoding='utf-8') as f:

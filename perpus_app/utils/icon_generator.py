@@ -15,7 +15,6 @@ def create_icon(name, draw_func):
     draw = ImageDraw.Draw(img)
     draw_func(draw)
     
-    # Resize down to get anti-aliasing effect
     img = img.resize((24, 24), Image.Resampling.LANCZOS)
     img.save(path)
     return path
@@ -30,17 +29,14 @@ def draw_dashboard(draw):
 def draw_book(draw):
     color = (255, 255, 255, 255)
     draw.rounded_rectangle([12, 8, 52, 56], radius=4, fill=color)
-    # Book spine/details in transparent
     draw.line([24, 8, 24, 56], fill=(0,0,0,0), width=4)
     draw.line([32, 16, 44, 16], fill=(0,0,0,0), width=4)
     draw.line([32, 28, 44, 28], fill=(0,0,0,0), width=4)
 
 def draw_users(draw):
     color = (255, 255, 255, 255)
-    # Person 1
     draw.ellipse([12, 10, 32, 30], fill=color)
     draw.ellipse([4, 34, 40, 60], fill=color)
-    # Person 2 (offset)
     draw.ellipse([36, 16, 52, 32], fill=color)
     draw.ellipse([32, 36, 60, 60], fill=color)
 

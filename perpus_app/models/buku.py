@@ -13,14 +13,12 @@ class Buku:
         self._tahun = 0
         self._stok = 0
         
-        # Setter dipanggil untuk melakukan validasi
         self.set_judul(judul)
         self.set_penulis(penulis)
         self.set_penerbit(penerbit)
         self.set_tahun(tahun)
         self.set_stok(stok)
         
-        # Referensi balik objek KategoriBuku (dikelola oleh Service)
         self._kategori = None
 
     @property
@@ -42,10 +40,8 @@ class Buku:
         return self._judul
 
     def set_judul(self, judul: str) -> None:
-        # INPUT VALIDASI
         valid, pesan = validasi_teks(judul, "Judul Buku")
         if not valid:
-            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._judul = str(judul).strip()
 
@@ -57,10 +53,8 @@ class Buku:
         return self._penulis
 
     def set_penulis(self, penulis: str) -> None:
-        # INPUT VALIDASI
         valid, pesan = validasi_teks(penulis, "Penulis")
         if not valid:
-            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._penulis = str(penulis).strip()
 
@@ -72,10 +66,8 @@ class Buku:
         return self._penerbit
 
     def set_penerbit(self, penerbit: str) -> None:
-        # INPUT VALIDASI
         valid, pesan = validasi_teks(penerbit, "Penerbit")
         if not valid:
-            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._penerbit = str(penerbit).strip()
 
@@ -87,10 +79,8 @@ class Buku:
         return self._tahun
 
     def set_tahun(self, tahun: int | str) -> None:
-        # INPUT VALIDASI
         valid, pesan = validasi_tahun_terbit(tahun)
         if not valid:
-            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._tahun = int(tahun)
 
@@ -102,16 +92,13 @@ class Buku:
         return self._stok
 
     def set_stok(self, stok: int | str) -> None:
-        # INPUT VALIDASI
         valid, pesan = validasi_stok(stok)
         if not valid:
-            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._stok = int(stok)
 
     @property
     def status(self) -> str:
-        # Computed property: otomatis menyesuaikan berdasarkan sisa stok
         return StatusBuku.TERSEDIA if self._stok > 0 else StatusBuku.HABIS
         
     def get_status(self) -> str:
@@ -122,7 +109,6 @@ class Buku:
 
     def kurangi_stok(self, jumlah: int = 1) -> None:
         if self._stok - jumlah < 0:
-            # FAULT HANDLING
             raise StokTidakCukupError(f"Stok buku '{self._judul}' tidak mencukupi. Sisa stok: {self._stok}.")
         self._stok -= jumlah
 

@@ -13,15 +13,12 @@ class RegisterPetugasFrame(ttk.Frame):
         self._build_ui()
 
     def _build_ui(self):
-        # ── Kontainer terpusat di tengah layar ──────────────────────────────
         outer = ttk.Frame(self)
         outer.place(relx=0.5, rely=0.5, anchor="center")
 
-        # ── Card Panel ───────────────────────────────────────────────────────
         card = ttk.Frame(outer, padding=(40, 25), relief="groove", borderwidth=2)
         card.pack()
 
-        # ── Logo & Judul ─────────────────────────────────────────────────────
         ttk.Label(
             card, text="◈",
             font=("Helvetica", 36, "bold"),
@@ -37,7 +34,6 @@ class RegisterPetugasFrame(ttk.Frame):
             font=("Helvetica", 16, "bold")
         ).pack(pady=(0, 16))
 
-        # ── Form Grid ────────────────────────────────────────────────────────
         frame_form = ttk.Frame(card)
         frame_form.pack(fill="x")
 
@@ -68,7 +64,6 @@ class RegisterPetugasFrame(ttk.Frame):
         self.ent_username = ttk.Entry(frame_form, width=36)
         self.ent_username.grid(row=4, column=1, pady=4, sticky="ew")
 
-        # Password + show/hide
         lbl(5, "Password")
         frame_pwd = ttk.Frame(frame_form)
         frame_pwd.grid(row=5, column=1, pady=4, sticky="ew")
@@ -81,7 +76,6 @@ class RegisterPetugasFrame(ttk.Frame):
         )
         self.btn_toggle_pwd.pack(side="right", padx=(6, 0))
 
-        # Konfirmasi + show/hide
         lbl(6, "Konfirmasi")
         frame_konfirm = ttk.Frame(frame_form)
         frame_konfirm.grid(row=6, column=1, pady=4, sticky="ew")
@@ -94,7 +88,6 @@ class RegisterPetugasFrame(ttk.Frame):
         )
         self.btn_toggle_konfirm.pack(side="right", padx=(6, 0))
 
-        # Panduan aturan password
         hint_text = "  ◆ Min. 8 karakter  ◆ Huruf kapital (A-Z)  ◆ Angka (0-9)  ◆ Simbol (@, _, !, #, ...)"
         ttk.Label(
             frame_form,
@@ -103,19 +96,15 @@ class RegisterPetugasFrame(ttk.Frame):
             bootstyle="secondary"
         ).grid(row=7, column=0, columnspan=2, sticky="w", pady=(2, 4))
 
-
-        # Label error inline
         self.lbl_error = ttk.Label(card, text="", bootstyle="danger", font=("Helvetica", 9))
         self.lbl_error.pack(pady=(10, 0))
 
-        # Tombol Daftar
         ttk.Button(
             card, text="Daftar",
             bootstyle="primary",
             command=self._on_submit
         ).pack(fill="x", pady=(10, 6))
 
-        # Link kembali ke login
         ttk.Button(
             card, text="Kembali ke Halaman Login",
             bootstyle="link",
@@ -151,7 +140,6 @@ class RegisterPetugasFrame(ttk.Frame):
         password = self.ent_password.get()
         konfirm  = self.ent_konfirm.get()
 
-        # EXCEPTION HANDLING
         try:
             self.facade.petugas_service.registrasi(
                 nama, notelp, email, jabatan, username, password, konfirm

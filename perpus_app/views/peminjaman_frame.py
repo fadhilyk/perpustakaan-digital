@@ -11,7 +11,6 @@ class PeminjamanFrame(ttk.Frame):
         self.master = master
         self.facade = facade
         
-        # Pengambilan State Utama untuk Combo Box Peminjaman (buku wajib yang ber-stok > 0)
         self.list_anggota = self.facade.anggota_service.get_all()
         self.list_buku = [b for b in self.facade.buku_service.get_all() if b.stok > 0]
         
@@ -20,7 +19,6 @@ class PeminjamanFrame(ttk.Frame):
         self._load_data()
 
     def _build_ui(self):
-        # 1. Header Area
         frame_header = ttk.Frame(self)
         frame_header.pack(fill="x", padx=20, pady=10)
         ttk.Label(frame_header, text="Sistem Transaksi Peminjaman", font=("Helvetica", 20, "bold")).pack(side="left")
@@ -29,7 +27,6 @@ class PeminjamanFrame(ttk.Frame):
         frame_content = ttk.Frame(self)
         frame_content.pack(fill="both", expand=True, padx=20, pady=10)
 
-        # 2. PANEL KIRI: FORM PERINTAH TRANSAKSI PINJAM & KEMBALI
         frame_form = ttk.Labelframe(frame_content, text="Panel Peminjaman Baru", padding=15)
         frame_form.pack(side="left", fill="y", padx=(0, 15))
         
@@ -38,7 +35,6 @@ class PeminjamanFrame(ttk.Frame):
         self.cb_anggota = ttk.Combobox(frame_form, values=cb_anggota_values, state="readonly", width=35)
         self.cb_anggota.pack(fill="x", pady=(0, 15))
         
-        # Hanya muat daftar buku yang stoknya di atas nol (tersedia di rak fisik)
         ttk.Label(frame_form, text="Buku Tersedia (Stok > 0)").pack(anchor="w", pady=(5, 2))
         cb_buku_values = [f"{b.id_buku} - {b.judul} (Stok: {b.stok})" for b in self.list_buku]
         self.cb_buku = ttk.Combobox(frame_form, values=cb_buku_values, state="readonly", width=35)
@@ -47,12 +43,10 @@ class PeminjamanFrame(ttk.Frame):
         ttk.Button(frame_form, text="Eksekusi Peminjaman", bootstyle="success", command=self._on_pinjam).pack(fill="x", pady=5)
         ttk.Button(frame_form, text="Sinkronisasi / Muat Ulang Stok", bootstyle="outline-info", command=self._refresh_combos).pack(fill="x", pady=5)
         
-        # Papan kendali untuk mengembalikan (hanya aktif jika yang diklik di tabel statusnya Aktif)
         ttk.Label(frame_form, text="Aksi Baris Tabel:").pack(anchor="w", pady=(40, 2))
         self.btn_kembali = ttk.Button(frame_form, text="Tandai Sudah Dikembalikan", bootstyle="warning", state="disabled", command=self._on_kembali)
         self.btn_kembali.pack(fill="x", pady=5)
 
-        # 3. PANEL KANAN: TABEL DAFTAR SEMUA TRANSAKSI
         frame_kanan = ttk.Frame(frame_content)
         frame_kanan.pack(side="right", fill="both", expand=True)
 
@@ -89,8 +83,6 @@ class PeminjamanFrame(ttk.Frame):
             self.tree.delete(item)
             
         for p in data_list:
-            # Karena composition root sudah merekonstruksi relasi pointer
-            # Kita bisa memanggil properti internal dari objek '_anggota' dan '_buku'
             nama_anggota = getattr(p, '_anggota', None).nama if getattr(p, '_anggota', None) else f"ID {p.id_anggota}"
             judul_buku = getattr(p, '_buku', None).judul if getattr(p, '_buku', None) else f"ID {p.id_buku}"
             
@@ -100,7 +92,6 @@ class PeminjamanFrame(ttk.Frame):
 
     def _refresh_combos(self):
         self.list_anggota = self.facade.anggota_service.get_all()
-        # Seleksi array in-line yang membuang buku tanpa stok dari dropdown (Stabilitas Bisnis)
         self.list_buku = [b for b in self.facade.buku_service.get_all() if b.stok > 0]
         
         cb_anggota_values = [f"{a.id_pengguna} - {a.nama}" for a in self.list_anggota]
@@ -128,7 +119,6 @@ class PeminjamanFrame(ttk.Frame):
             self.selected_id_pinjam = int(val[0])
             status = val[5]
             
-            # State manager untuk tombol Pengembalian
             if status == StatusPeminjaman.DIPINJAM:
                 self.btn_kembali.config(state="normal")
             else:
@@ -145,7 +135,6 @@ class PeminjamanFrame(ttk.Frame):
         id_anggota = int(val_anggota.split(" - ")[0])
         id_buku = int(val_buku.split(" - ")[0])
         
-        # Mengecek identitas diri sendiri dari Session (Siapa petugas yang sedang bertugas log in?)
         petugas = getattr(self.facade, "petugas_aktif", None)
         if not petugas:
             Messagebox.show_error("Autentikasi tidak terdeteksi atau kadaluwarsa. Log in ulang untuk melakukan transaksi.", "Sesi Hilang")
@@ -153,7 +142,6 @@ class PeminjamanFrame(ttk.Frame):
             
         id_petugas = petugas.id_pengguna
         
-        # EXCEPTION HANDLING
         try:
             self.facade.peminjaman_service.pinjam_buku(id_anggota, id_buku, id_petugas)
             self._load_data()
@@ -171,7 +159,6 @@ class PeminjamanFrame(ttk.Frame):
             
         konfirm = Messagebox.yesno(f"Setujui pengembalian untuk ID Transaksi {self.selected_id_pinjam}?\n(Denda otomatis dihitung).", "Konfirmasi Laporan Kembali")
         if konfirm == "Yes":
-            # EXCEPTION HANDLING
             try:
                 self.facade.peminjaman_service.kembalikan_buku(self.selected_id_pinjam)
                 self._load_data()

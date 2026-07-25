@@ -1,4 +1,3 @@
-# FAULT HANDLING
 class AppError(Exception):
     pass
 

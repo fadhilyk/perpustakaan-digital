@@ -7,10 +7,8 @@ if TYPE_CHECKING:
     from perpus_app.models.anggota import Anggota as KelasAnggota
     from perpus_app.models.peminjaman import Peminjaman
 
-# INHERITANCE
 class Petugas(Pengguna):
     def __init__(self, id_pengguna: int, nama: str, no_telepon: str, email: str, jabatan: str, username: str, password_hash: str):
-        # Bukti Inheritance: Memanggil __init__ dari kelas induk
         super().__init__(id_pengguna, nama, no_telepon, email)
         
         self._jabatan = ""
@@ -28,10 +26,8 @@ class Petugas(Pengguna):
         return self._jabatan
 
     def set_jabatan(self, jabatan: str) -> None:
-        # INPUT VALIDASI
         valid, pesan = validasi_teks(jabatan, "Jabatan")
         if not valid:
-            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._jabatan = str(jabatan).strip()
 
@@ -43,10 +39,8 @@ class Petugas(Pengguna):
         return self._username
 
     def set_username(self, username: str) -> None:
-        # INPUT VALIDASI
         valid, pesan = validasi_username(username)
         if not valid:
-            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._username = str(username).strip()
         
@@ -63,7 +57,5 @@ class Petugas(Pengguna):
     def verifikasi(self, anggota: 'KelasAnggota') -> bool:
         return True
 
-    # POLIMORFISME
     def tampilkan_info(self) -> str:
-        # Bukti Polymorphism: Implementasi metode yang dioverride berbeda dari Anggota
         return f"Petugas: {self.nama} (Jabatan: {self._jabatan})"

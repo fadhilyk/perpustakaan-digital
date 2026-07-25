@@ -15,17 +15,14 @@ class AnggotaFrame(ttk.Frame):
         self._load_data()
 
     def _build_ui(self):
-        # Header
         frame_header = ttk.Frame(self)
         frame_header.pack(fill="x", padx=20, pady=10)
         ttk.Label(frame_header, text="Kelola Data Anggota", font=("Helvetica", 20, "bold")).pack(side="left")
         ttk.Button(frame_header, text="⬅ Kembali ke Dashboard", bootstyle="danger", command=self._go_dashboard).pack(side="right")
 
-        # Konten Terbelah (Kiri Form, Kanan Tabel)
         frame_content = ttk.Frame(self)
         frame_content.pack(fill="both", expand=True, padx=20, pady=10)
 
-        # KIRI: FORM
         frame_form = ttk.Labelframe(frame_content, text="Form Data Diri Anggota", padding=15)
         frame_form.pack(side="left", fill="y", padx=(0, 15))
         
@@ -45,7 +42,6 @@ class AnggotaFrame(ttk.Frame):
         self.ent_alamat = ttk.Entry(frame_form, width=35)
         self.ent_alamat.pack(fill="x", pady=(0, 15))
 
-        # Action Buttons
         frame_action = ttk.Frame(frame_form)
         frame_action.pack(fill="x", pady=10)
         ttk.Button(frame_action, text="Tambah", bootstyle="success", command=self._on_tambah).pack(side="left", expand=True, fill="x", padx=2)
@@ -54,7 +50,6 @@ class AnggotaFrame(ttk.Frame):
         
         ttk.Button(frame_form, text="Bersihkan Pilihan", bootstyle="outline-secondary", command=self._clear_form).pack(fill="x", pady=5)
 
-        # KANAN: TABEL DATA ANGGOTA
         frame_kanan = ttk.Frame(frame_content)
         frame_kanan.pack(side="right", fill="both", expand=True)
 
@@ -89,7 +84,6 @@ class AnggotaFrame(ttk.Frame):
         toggle_empty_state(self.tree, getattr(self, 'scrollbar', None), getattr(self, 'empty_state_frame', None), len(data_list) == 0)
             
         for a in data_list:
-            # Karena di model _no_telepon dan _email adalah protected, getattr kita fungsikan untuk jaga-jaga
             no_telp = getattr(a, '_no_telepon', '')
             email = getattr(a, '_email', '')
             self.tree.insert("", "end", values=(
@@ -117,7 +111,6 @@ class AnggotaFrame(ttk.Frame):
             self.ent_nama.insert(0, str(val[1]))
             self.ent_notelp.insert(0, str(val[2]))
             self.ent_email.insert(0, str(val[3]))
-            # Handle kondisi "None" menjadi string kosong
             alamat_val = str(val[4]) if str(val[4]) != "None" else ""
             self.ent_alamat.insert(0, alamat_val)
 
@@ -129,7 +122,6 @@ class AnggotaFrame(ttk.Frame):
         return nama, notelp, email, alamat
 
     def _on_tambah(self):
-        # EXCEPTION HANDLING
         try:
             nama, notelp, email, alamat = self._get_form_data()
             self.facade.anggota_service.tambah(nama, notelp, email, alamat)
@@ -146,7 +138,6 @@ class AnggotaFrame(ttk.Frame):
         if not self.selected_id:
             Messagebox.show_warning("Mohon pilih baris data di tabel yang mau Anda perbarui.", "Peringatan Pemilihan")
             return
-        # EXCEPTION HANDLING
         try:
             nama, notelp, email, alamat = self._get_form_data()
             self.facade.anggota_service.update(self.selected_id, nama, notelp, email, alamat)
@@ -166,7 +157,6 @@ class AnggotaFrame(ttk.Frame):
             
         konfirm = Messagebox.yesno(f"Anda sangat yakin untuk menghapus Anggota ID {self.selected_id} selamanya?", "Konfirmasi Eksekusi")
         if konfirm == "Yes":
-            # EXCEPTION HANDLING
             try:
                 self.facade.anggota_service.hapus(self.selected_id)
                 self._clear_form()

@@ -15,20 +15,17 @@ class DashboardFrame(ttk.Frame):
         self.facade = facade
         self._clock_job = None  # Menyimpan referensi job after() agar bisa dibatalkan
         self._build_ui()
-        # Responsif: saat ukuran jendela berubah, posisi konten ikut menyesuaikan
         self.bind("<Configure>", self._on_resize)
 
     def _get_stats(self):
         total_judul   = len(self.facade.buku_service.get_all())
         total_anggota = len(self.facade.anggota_service.get_all())
-        # EXCEPTION HANDLING
         try:
             all_pinjam    = self.facade.peminjaman_service.get_all()
             dipinjam      = sum(1 for p in all_pinjam if p.get_status() == StatusPeminjaman.DIPINJAM)
         except Exception:
             dipinjam = 0
             
-        # Tersedia adalah total seluruh STOK fisik yang ada saat ini
         tersedia = sum(b.stok for b in self.facade.buku_service.get_all())
         
         return total_judul, total_anggota, dipinjam, tersedia
@@ -48,15 +45,11 @@ class DashboardFrame(ttk.Frame):
         petugas      = getattr(self.facade, 'petugas_aktif', None)
         nama_petugas = petugas.nama if petugas else "Petugas"
 
-        # ── Kontainer utama ─────────────────────────────────────────────────
-        # Menggunakan place(relx, rely) agar selalu berada di tengah layar
         self.container = ttk.Frame(self)
         self.container.place(relx=0.5, rely=0.5, anchor="center")
 
-        # ── Header ──────────────────────────────────────────────────────────
         sapaan, simbol = self._get_sapaan()
 
-        # Judul dengan efek typewriter — dimulai kosong, warna biru info
         self.lbl_title = ttk.Label(
             self.container,
             text="",
@@ -65,7 +58,6 @@ class DashboardFrame(ttk.Frame):
         )
         self.lbl_title.pack(pady=(0, 2))
 
-        # Tagline italic — muncul setelah animasi typewriter selesai
         self.lbl_tagline = ttk.Label(
             self.container,
             text="",
@@ -73,7 +65,6 @@ class DashboardFrame(ttk.Frame):
         )
         self.lbl_tagline.pack(pady=(0, 6))
 
-        # Mulai animasi typewriter
         self._judul_full  = "Dashboard Perpustakaan"
         self._judul_idx   = 0
         self._blink_count = 0
@@ -85,7 +76,6 @@ class DashboardFrame(ttk.Frame):
             font=("Helvetica", 13)
         ).pack(pady=(0, 6))
 
-        # Label jam real-time
         self.lbl_jam = ttk.Label(
             self.container,
             text="",
@@ -95,10 +85,8 @@ class DashboardFrame(ttk.Frame):
         self.lbl_jam.pack(pady=(0, 14))
         self._update_clock()  # Mulai tick jam
 
-        # ── Separator atas ──────────────────────────────────────────────────
         ttk.Separator(self.container, orient="horizontal").pack(fill="x", pady=(0, 18))
 
-        # ── Kartu Statistik ─────────────────────────────────────────────────
         total_judul, total_anggota, dipinjam, tersedia = self._get_stats()
 
         stats = [
@@ -128,27 +116,22 @@ class DashboardFrame(ttk.Frame):
             )
             lbl_desc.pack()
             
-            # Tambahkan efek hover
             add_card_hover_effect(card, [lbl_val, lbl_desc], style)
 
-        # ── Separator bawah ─────────────────────────────────────────────────
         ttk.Separator(self.container, orient="horizontal").pack(fill="x", pady=(0, 18))
 
-        # ── Tombol Menu ─────────────────────────────────────────────────────
         frame_btn = ttk.Frame(self.container)
         frame_btn.pack(pady=(0, 10))
 
         btn_style = "primary"
         btn_width = 24
 
-        # Pre-load icons
         self.icon_dashboard = IconManager.get_icon("dashboard", size=(16, 16))
         self.icon_books = IconManager.get_icon("books", size=(16, 16))
         self.icon_users = IconManager.get_icon("users", size=(16, 16))
         self.icon_tags = IconManager.get_icon("tags", size=(16, 16))
         self.icon_logout = IconManager.get_icon("logout", size=(16, 16))
 
-        # Baris 1
         ttk.Button(
             frame_btn, text=" Kelola Kategori", image=self.icon_tags, compound="left",
             bootstyle=btn_style, width=btn_width,
@@ -160,7 +143,6 @@ class DashboardFrame(ttk.Frame):
             command=self._go_buku
         ).grid(row=0, column=1, padx=10, pady=8)
 
-        # Baris 2
         ttk.Button(
             frame_btn, text=" Kelola Anggota", image=self.icon_users, compound="left",
             bootstyle=btn_style, width=btn_width,
@@ -172,14 +154,12 @@ class DashboardFrame(ttk.Frame):
             command=lambda: self.master.show_frame(PeminjamanFrame)
         ).grid(row=1, column=1, padx=10, pady=8)
 
-        # Baris 3: lebar penuh
         ttk.Button(
             frame_btn, text=" Laporan & Statistik", image=self.icon_dashboard, compound="left",
             bootstyle="info", width=btn_width,
             command=lambda: self.master.show_frame(LaporanFrame)
         ).grid(row=2, column=0, columnspan=2, padx=10, pady=8)
 
-        # ── Logout ───────────────────────────────────────────────────────────
         ttk.Button(
             self.container, text=" Logout", image=self.icon_logout, compound="left",
             bootstyle="danger outline",
@@ -191,12 +171,10 @@ class DashboardFrame(ttk.Frame):
             return
         if self._judul_idx <= len(self._judul_full):
             teks_sekarang = self._judul_full[:self._judul_idx]
-            # Tampilkan kursor | saat mengetik
             self.lbl_title.config(text=teks_sekarang + "|") 
             self._judul_idx += 1
             self.after(65, self._typewriter)
         else:
-            # Selesai mengetik — mulai kedipkan kursor
             self._blink_count = 0
             self._blink_cursor()
 
@@ -211,7 +189,6 @@ class DashboardFrame(ttk.Frame):
             self._blink_count += 1
             self.after(300, self._blink_cursor)
         else:
-            # Kursor hilang, tampilkan judul bersih + munculkan tagline
             self.lbl_title.config(text=self._judul_full)
             self.lbl_tagline.config(
                 text="Kelola koleksi buku dengan mudah & efisien"

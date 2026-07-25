@@ -13,15 +13,12 @@ from perpus_app.services.laporan import Laporan
 
 class Perpustakaan:
     def __init__(self):
-        # 1. Instansiasi Repositories
         self.kategori_repo = KategoriRepository()
         self.buku_repo = BukuRepository()
         self.anggota_repo = AnggotaRepository()
         self.petugas_repo = PetugasRepository()
         self.peminjaman_repo = PeminjamanRepository()
 
-        # 2. Instansiasi Services (Dependency Injection via Konstruktor)
-        # Menunjukkan relasi Composition (1-1) sesuai SDD
         self.kategori_service = KategoriService(self.kategori_repo)
         self.buku_service = BukuService(self.buku_repo, self.kategori_service)
         self.anggota_service = AnggotaService(self.anggota_repo)
@@ -35,7 +32,6 @@ class Perpustakaan:
         
         self.laporan = Laporan(self.buku_service, self.peminjaman_service, self.anggota_service)
 
-        # 3. Merajut relasi in-memory setelah data-data tersebut diload dari JSON
         self._rekonstruksi_data()
 
     def _rekonstruksi_data(self) -> None:
@@ -45,7 +41,6 @@ class Perpustakaan:
         anggota_list = self.anggota_service.get_all()
         petugas_list = self.petugas_service.get_all()
 
-        # 3a. Relasi Kategori <-> Buku (1-N Agregasi)
         for buku in buku_list:
             for kategori in kategori_list:
                 if buku.id_kategori == kategori.id_kategori:
@@ -53,7 +48,6 @@ class Perpustakaan:
                     kategori.tambah_buku(buku)
                     break
 
-        # 3b. Relasi Peminjaman <-> (Buku, Anggota, Petugas) (1-N Asosiasi)
         for pinjam in peminjaman_list:
             for buku in buku_list:
                 if pinjam.id_buku == buku.id_buku:
@@ -70,7 +64,6 @@ class Perpustakaan:
                     pinjam._petugas = petugas
                     break
 
-        # 3c. Relasi Anggota <-> List Peminjaman (1-N Asosiasi/Agregasi di sisi anggota)
         for anggota in anggota_list:
             pinjaman_anggota = [p for p in peminjaman_list if p.id_anggota == anggota.id_pengguna]
             anggota.set_list_peminjaman(pinjaman_anggota)

@@ -5,7 +5,6 @@ from perpus_app.services.kategori_service import KategoriService
 from perpus_app.exceptions.app_exceptions import DataTidakDitemukanError, ValidasiError
 from perpus_app.utils.id_generator import generate_id
 
-# CRUD
 class BukuService:
     def __init__(self, repository: BukuRepository, kategori_service: KategoriService):
         self._repository = repository
@@ -49,22 +48,17 @@ class BukuService:
         for b in self.daftar_buku:
             if b.id_buku == id_buku:
                 return b
-        # FAULT HANDLING
         raise DataTidakDitemukanError(f"Buku dengan ID {id_buku} tidak ditemukan.")
 
     def tambah_buku(self, judul: str, penulis: str, penerbit: str, tahun: int, stok: int, id_kategori: int) -> Buku:
-        # Validasi id_kategori sesuai instruksi
-        # EXCEPTION HANDLING
         try:
             kategori = self._kategori_service.get_by_id(id_kategori)
         except DataTidakDitemukanError:
-            # FAULT HANDLING
             raise ValidasiError(f"Kategori dengan ID {id_kategori} tidak ditemukan atau tidak valid.")
 
         new_id = generate_id(self.daftar_buku, "id_buku")
         buku = Buku(new_id, judul, penulis, penerbit, tahun, stok, id_kategori)
         
-        # Langsung sambungkan agregasi in-memory supaya konsisten
         buku._kategori = kategori
         kategori.tambah_buku(buku)
         
@@ -73,16 +67,13 @@ class BukuService:
         return buku
 
     def update_buku(self, id_buku: int, judul: str, penulis: str, penerbit: str, tahun: int, stok: int, id_kategori: int) -> Buku:
-        # EXCEPTION HANDLING
         try:
             kategori = self._kategori_service.get_by_id(id_kategori)
         except DataTidakDitemukanError:
-            # FAULT HANDLING
             raise ValidasiError(f"Kategori dengan ID {id_kategori} tidak ditemukan atau tidak valid.")
             
         buku = self.get_by_id(id_buku)
         
-        # Update agregasi in-memory jika kategori berubah
         if buku.id_kategori != id_kategori and buku._kategori:
             buku._kategori.hapus_buku(id_buku)
             
@@ -102,7 +93,6 @@ class BukuService:
     def hapus_buku(self, id_buku: int) -> None:
         buku = self.get_by_id(id_buku)
         
-        # Bersihkan referensi dari Kategori sebelum buku dihapus
         if buku._kategori:
             buku._kategori.hapus_buku(id_buku)
             

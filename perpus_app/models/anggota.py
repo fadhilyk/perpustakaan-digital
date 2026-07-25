@@ -3,16 +3,13 @@ from perpus_app.models.pengguna import Pengguna
 from perpus_app.utils.validators import validasi_teks
 from perpus_app.exceptions.app_exceptions import ValidasiError
 
-# Menggunakan TYPE_CHECKING untuk menghindari circular import
 if TYPE_CHECKING:
     from perpus_app.models.buku import Buku
     from perpus_app.models.peminjaman import Peminjaman
     from perpus_app.config import StatusPeminjaman
 
-# INHERITANCE
 class Anggota(Pengguna):
     def __init__(self, id_pengguna: int, nama: str, no_telepon: str, email: str, alamat: str):
-        # Bukti Inheritance: Memanggil __init__ dari kelas induk
         super().__init__(id_pengguna, nama, no_telepon, email)
         
         self._alamat = ""
@@ -27,10 +24,8 @@ class Anggota(Pengguna):
         return self._alamat
 
     def set_alamat(self, alamat: str) -> None:
-        # INPUT VALIDASI
         valid, pesan = validasi_teks(alamat, "Alamat")
         if not valid:
-            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._alamat = str(alamat).strip()
 
@@ -45,13 +40,11 @@ class Anggota(Pengguna):
         pass
 
     def get_aktif(self) -> list['Peminjaman']:
-        # Filter peminjaman yang berstatus "Dipinjam"
         from perpus_app.config import StatusPeminjaman
         return [p for p in self._list_peminjaman if getattr(p, 'status', p.get_status()) == StatusPeminjaman.DIPINJAM]
 
     def get_riwayat(self) -> list['Peminjaman']:
         return self._list_peminjaman
 
-    # POLIMORFISME
     def tampilkan_info(self) -> str:
         return f"Anggota: {self.nama}, Alamat: {self._alamat}, Aktif Peminjaman: {len(self._list_peminjaman)}"

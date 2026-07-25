@@ -38,7 +38,6 @@ class KategoriService:
         for k in self.daftar_kategori:
             if k.id_kategori == id_kategori:
                 return k
-        # FAULT HANDLING
         raise DataTidakDitemukanError(f"Kategori dengan ID {id_kategori} tidak ditemukan.")
 
     def tambah(self, nama_kategori: str, deskripsi: str = "") -> KategoriBuku:
@@ -58,10 +57,7 @@ class KategoriService:
     def hapus(self, id_kategori: int) -> None:
         kategori = self.get_by_id(id_kategori)
         
-        # Mengecek apakah ada Buku dengan id_kategori tsb
-        # Karena relasi agregasi di _rekonstruksi_data() sudah diisi, kita cukup baca list ini
         if len(kategori.get_daftar_buku()) > 0:
-            # FAULT HANDLING
             raise KategoriMasihDipakaiError(
                 f"Kategori '{kategori.nama_kategori}' tidak bisa dihapus karena masih dipakai oleh {len(kategori.get_daftar_buku())} buku."
             )

@@ -14,7 +14,6 @@ class KategoriBuku:
         self.set_nama_kategori(nama_kategori)
         self.set_deskripsi(deskripsi)
         
-        # Agregasi: In-memory list untuk menampung referensi objek Buku
         self._daftar_buku: list['Buku'] = []
 
     @property
@@ -29,10 +28,8 @@ class KategoriBuku:
         return self._nama_kategori
 
     def set_nama_kategori(self, nama_kategori: str) -> None:
-        # INPUT VALIDASI
         valid, pesan = validasi_teks(nama_kategori, "Nama Kategori")
         if not valid:
-            # FAULT HANDLING
             raise ValidasiError(pesan)
         self._nama_kategori = str(nama_kategori).strip()
 
@@ -44,7 +41,6 @@ class KategoriBuku:
         return self._deskripsi
 
     def set_deskripsi(self, deskripsi: str) -> None:
-        # Deskripsi bersifat opsional, namun tetap di-trim
         self._deskripsi = str(deskripsi).strip() if deskripsi else ""
 
     def tambah_buku(self, buku: 'Buku') -> None:
@@ -52,7 +48,6 @@ class KategoriBuku:
             self._daftar_buku.append(buku)
 
     def hapus_buku(self, id_buku: int) -> None:
-        # Menghapus buku dari list berdasarkan id_buku
         self._daftar_buku = [buku for buku in self._daftar_buku if getattr(buku, 'id_buku', getattr(buku, '_id_buku', -1)) != id_buku]
 
     def get_daftar_buku(self) -> list['Buku']:

@@ -11,15 +11,12 @@ class LoginFrame(ttk.Frame):
         self._build_ui()
 
     def _build_ui(self):
-        # ── Kontainer terpusat di tengah layar ──────────────────────────────
         self.outer = ttk.Frame(self)
         self.outer.place(relx=0.5, rely=0.5, anchor="center")
 
-        # ── Card Panel ───────────────────────────────────────────────────────
         card = ttk.Frame(self.outer, padding=(40, 30), relief="groove", borderwidth=2)
         card.pack()
 
-        # ── Logo & Judul ─────────────────────────────────────────────────────
         ttk.Label(
             card, text="◈",
             font=("Helvetica", 40, "bold"),
@@ -35,16 +32,13 @@ class LoginFrame(ttk.Frame):
             font=("Helvetica", 18, "bold")
         ).pack(pady=(0, 20))
 
-        # ── Form ─────────────────────────────────────────────────────────────
         frame_form = ttk.Frame(card)
         frame_form.pack(fill="x")
 
-        # Username
         ttk.Label(frame_form, text="Username").pack(anchor="w")
         self.ent_username = ttk.Entry(frame_form, width=38)
         self.ent_username.pack(fill="x", pady=(0, 14))
 
-        # Password + tombol show/hide
         ttk.Label(frame_form, text="Password").pack(anchor="w")
         frame_pwd = ttk.Frame(frame_form)
         frame_pwd.pack(fill="x", pady=(0, 6))
@@ -59,22 +53,18 @@ class LoginFrame(ttk.Frame):
         )
         self.btn_toggle.pack(side="left", padx=(6, 0))
 
-        # Bind Enter ke tombol login
         self.ent_username.bind("<Return>", lambda e: self._on_login())
         self.ent_password.bind("<Return>", lambda e: self._on_login())
 
-        # Label error inline
         self.lbl_error = ttk.Label(card, text="", bootstyle="danger", font=("Helvetica", 9))
         self.lbl_error.pack(pady=(4, 0))
 
-        # Tombol Masuk
         ttk.Button(
             card, text="Masuk",
             bootstyle="success",
             command=self._on_login
         ).pack(fill="x", pady=(10, 8))
 
-        # Link daftar
         ttk.Button(
             card, text="Daftar Petugas Baru",
             bootstyle="link",
@@ -95,7 +85,6 @@ class LoginFrame(ttk.Frame):
         username = self.ent_username.get().strip()
         password = self.ent_password.get()
 
-        # EXCEPTION HANDLING
         try:
             petugas = self.facade.petugas_service.login(username, password)
             self.facade.petugas_aktif = petugas
@@ -111,7 +100,6 @@ class LoginFrame(ttk.Frame):
             self._shake()
 
     def _shake(self):
-        # Gunakan offset relatif (relx) agar tidak meleset ke luar layar
         offsets = [0.02, -0.02, 0.016, -0.016, 0.01, -0.01, 0.005, -0.005, 0.0]
         self._shake_step(offsets, 0)
 

@@ -1,1 +1,13 @@
-[]
+[
+    {
+        "id_pinjam": 1,
+        "id_anggota": 1,
+        "id_buku": 1,
+        "id_petugas": 2,
+        "tgl_pinjam": "2026-07-20",
+        "tgl_jatuh_tempo": "2026-07-27",
+        "tgl_kembali": null,
+        "status": "Dipinjam",
+        "denda": 0.0
+    }
+]

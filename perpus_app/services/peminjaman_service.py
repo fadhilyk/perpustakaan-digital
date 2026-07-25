@@ -62,29 +62,22 @@ class PeminjamanService:
         for p in self.daftar_pinjam:
             if p.id_pinjam == id_pinjam:
                 return p
-        # FAULT HANDLING
         raise DataTidakDitemukanError(f"Transaksi Peminjaman dengan ID {id_pinjam} tidak ditemukan.")
 
     def pinjam_buku(self, id_anggota: int, id_buku: int, id_petugas: int) -> Peminjaman:
-        # 1. Pastikan seluruh entitas valid & ada (bila tidak ada, mereka akan raise DataTidakDitemukanError)
         anggota = self._anggota_service.get_by_id(id_anggota)
         buku = self._buku_service.get_by_id(id_buku)
         petugas = self._petugas_service.get_by_id(id_petugas)
 
-        # 2. Kurangi stok (akan me-raise StokTidakCukupError jika stok buku <= 0)
         buku.kurangi_stok(1)
         
-        # Karena kita mengubah state (stok) buku, kita wajib menyimpannya ke buku.json
-        # via akses _save_data() milik BukuService
         self._buku_service._save_data()
 
-        # 3. Kalkulasi tanggal (hari ini + durasi konfigurasi)
         tgl_pinjam_dt = datetime.date.today()
         tgl_pinjam = tgl_pinjam_dt.strftime("%Y-%m-%d")
         tgl_jatuh_tempo_dt = tgl_pinjam_dt + datetime.timedelta(days=LAMA_PINJAM_HARI)
         tgl_jatuh_tempo = tgl_jatuh_tempo_dt.strftime("%Y-%m-%d")
 
-        # 4. Buat record peminjaman baru
         new_id = generate_id(self.daftar_pinjam, "id_pinjam")
         pinjam = Peminjaman(
             id_pinjam=new_id, 
@@ -95,15 +88,12 @@ class PeminjamanService:
             tgl_jatuh_tempo=tgl_jatuh_tempo
         )
 
-        # 5. Rajut referensi in-memory agar langsung mencerminkan perubahan
         pinjam._buku = buku
         pinjam._anggota = anggota
         pinjam._petugas = petugas
         
-        # Tambahkan ke history list peminjaman pada Anggota
         anggota.list_peminjaman.append(pinjam)
         
-        # 6. Simpan transaksi peminjaman
         self.daftar_pinjam.append(pinjam)
         self._save_data()
         
@@ -113,19 +103,14 @@ class PeminjamanService:
         pinjam = self.get_by_id(id_pinjam)
         
         if pinjam.status == StatusPeminjaman.DIKEMBALIKAN:
-            # FAULT HANDLING
             raise ValidasiError(f"Buku untuk transaksi ID {id_pinjam} sudah dikembalikan sebelumnya.")
             
-        # 1. Update status peminjaman (juga memicu kalkulasi denda otomatis)
         pinjam.kembalikan_buku() 
         
-        # 2. Kembalikan stok buku
         if pinjam._buku:
             pinjam._buku.tambah_stok(1)
-            # Simpan perubahan state buku
             self._buku_service._save_data()
             
-        # 3. Simpan perubahan peminjaman
         self._save_data()
         
         return pinjam

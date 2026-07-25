@@ -48,7 +48,6 @@ class Laporan:
     def cetak_anggota_teraktif(self) -> List[Dict[str, Any]]:
         anggota_list = self._anggota_service.get_all()
         
-        # Sorting dengan lambda expression berdasarkan jumlah elemen pada riwayat peminjaman
         sorted_anggota = sorted(anggota_list, key=lambda a: len(a.get_riwayat()), reverse=True)
         
         laporan = []

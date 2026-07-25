@@ -17,17 +17,14 @@ class BukuFrame(ttk.Frame):
         self._load_data()
 
     def _build_ui(self):
-        # 1. Header
         frame_header = ttk.Frame(self)
         frame_header.pack(fill="x", padx=20, pady=10)
         ttk.Label(frame_header, text="Kelola Data Buku", font=("Helvetica", 20, "bold")).pack(side="left")
         ttk.Button(frame_header, text="⬅ Kembali ke Dashboard", bootstyle="danger", command=self._go_dashboard).pack(side="right")
 
-        # 2. Main Content Split
         frame_content = ttk.Frame(self)
         frame_content.pack(fill="both", expand=True, padx=20, pady=10)
 
-        # 2a. Kiri: Form Buku
         frame_form = ttk.Labelframe(frame_content, text="Form Detail Buku", padding=15)
         frame_form.pack(side="left", fill="y", padx=(0, 15))
         
@@ -51,13 +48,11 @@ class BukuFrame(ttk.Frame):
         self.ent_stok = ttk.Entry(frame_form, width=35)
         self.ent_stok.pack(fill="x", pady=(0, 5))
         
-        # Combobox Kategori yang bersumber ketat dari list dinamis
         ttk.Label(frame_form, text="Kategori").pack(anchor="w", pady=(5, 2))
         cb_values = [f"{k.id_kategori} - {k.nama_kategori}" for k in self.kategori_list]
         self.cb_kategori = ttk.Combobox(frame_form, values=cb_values, state="readonly")
         self.cb_kategori.pack(fill="x", pady=(0, 15))
 
-        # Action Buttons
         frame_action = ttk.Frame(frame_form)
         frame_action.pack(fill="x", pady=10)
         ttk.Button(frame_action, text="Tambah", bootstyle="success", command=self._on_tambah).pack(side="left", expand=True, fill="x", padx=2)
@@ -66,7 +61,6 @@ class BukuFrame(ttk.Frame):
         
         ttk.Button(frame_form, text="Bersihkan Pilihan", bootstyle="outline-secondary", command=self._clear_form).pack(fill="x", pady=5)
 
-        # 2b. Kanan: Search & Table
         frame_kanan = ttk.Frame(frame_content)
         frame_kanan.pack(side="right", fill="both", expand=True)
 
@@ -150,8 +144,6 @@ class BukuFrame(ttk.Frame):
             self._clear_form()
             self.selected_id = int(val[0])
             
-            # Kita mengambil data utuh dari service untuk mengisi form secara aman
-            # EXCEPTION HANDLING
             try:
                 buku = self.facade.buku_service.get_by_id(self.selected_id)
                 self.ent_judul.insert(0, buku.judul)
@@ -160,7 +152,6 @@ class BukuFrame(ttk.Frame):
                 self.ent_tahun.insert(0, str(buku.tahun))
                 self.ent_stok.insert(0, str(buku.stok))
                 
-                # Meng-sinkronkan combobox kategori dengan data asli
                 kategori_str = f"{buku.id_kategori} - {buku._kategori.nama_kategori}" if getattr(buku, '_kategori', None) else ""
                 if kategori_str in self.cb_kategori['values']:
                     self.cb_kategori.set(kategori_str)
@@ -172,31 +163,24 @@ class BukuFrame(ttk.Frame):
         penulis = self.ent_penulis.get().strip()
         penerbit = self.ent_penerbit.get().strip()
         
-        # EXCEPTION HANDLING
         try:
             tahun = int(self.ent_tahun.get().strip())
         except ValueError:
-            # FAULT HANDLING
             raise AppError("Input 'Tahun' harus berupa format angka bulat (misal: 2023).")
             
-        # EXCEPTION HANDLING
         try:
             stok = int(self.ent_stok.get().strip())
         except ValueError:
-            # FAULT HANDLING
             raise AppError("Input 'Stok' harus berupa angka numerik.")
             
         kat_val = self.cb_kategori.get()
         if not kat_val:
-            # FAULT HANDLING
             raise AppError("Silakan tentukan Kategori melalui pilihan dropdown Combobox.")
             
-        # Ekstrak digit pertama dari pola "ID - Nama"
         id_kategori = int(kat_val.split(" - ")[0])
         return judul, penulis, penerbit, tahun, stok, id_kategori
 
     def _on_tambah(self):
-        # EXCEPTION HANDLING
         try:
             judul, penulis, penerbit, tahun, stok, id_kategori = self._get_form_data()
             self.facade.buku_service.tambah_buku(judul, penulis, penerbit, tahun, stok, id_kategori)
@@ -214,7 +198,6 @@ class BukuFrame(ttk.Frame):
             Messagebox.show_warning("Tentukan buku mana yang mau diupdate dengan mengekliknya di tabel.", "Pemilihan Wajib")
             return
             
-        # EXCEPTION HANDLING
         try:
             judul, penulis, penerbit, tahun, stok, id_kategori = self._get_form_data()
             self.facade.buku_service.update_buku(self.selected_id, judul, penulis, penerbit, tahun, stok, id_kategori)
@@ -234,7 +217,6 @@ class BukuFrame(ttk.Frame):
             
         konfirm = Messagebox.yesno(f"Anda yakin akan menghapus data buku ID {self.selected_id}?", "Verifikasi Hapus")
         if konfirm == "Yes":
-            # EXCEPTION HANDLING
             try:
                 self.facade.buku_service.hapus_buku(self.selected_id)
                 self._clear_form()
